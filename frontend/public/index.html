@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJ PERSONAL AGENT - AI Website Studio</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+        
+        .message-bubble {
+            border-radius: 18px;
+            padding: 16px 20px;
+            max-width: 85%;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .ai-message {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #818cf8;
+            margin: 0 2px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-indicator span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .capability-card {
+            transition: all 0.3s ease;
+        }
+        
+        .capability-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .sidebar-item {
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-item:hover {
+            background: rgba(100, 116, 139, 0.2);
+        }
+        
+        .sidebar-item.active {
+            background: rgba(99, 102, 241, 0.2);
+            border-left: 3px solid #6366f1;
+        }
+        
+        .provider-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        .connected {
+            background-color: #10b981;
+        }
+        
+        .disconnected {
+            background-color: #ef4444;
+        }
+        
+        .preview-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #334155;
+            color: #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        .input-field {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            padding: 12px 16px;
+            border-radius: 8px;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        
+        .tab-active {
+            border-bottom: 2px solid #6366f1;
+            color: #6366f1;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 3px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="gradient-bg text-gray-200 h-screen overflow-hidden">
+    <div class="flex h-full">
+        <!-- Sidebar -->
+        <div class="w-64 glass-effect flex flex-col">
+            <div class="p-4 border-b border-gray-700">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="bot" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg">AJ PERSONAL AGENT</h1>
+                        <p class="text-xs text-gray-400">AI Website Studio</p>
+                    </div>
+                </div>
+                
+                <button id="newProjectBtn" class="w-full py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg flex items-center justify-center gap-2 transition-all">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    New Project
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto scrollbar-thin p-2">
+                <div class="mb-4">
+                    <h3 class="text-xs uppercase tracking-wider text-gray-400 mb-2 px-2">Projects</h3>
+                    <div id="projectsList" class="space-y-1">
+                        <!-- Projects will be dynamically added here -->
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h3 class="text-xs uppercase tracking-wider text-gray-400 mb-2 px-2">AI Providers</h3>
+                    <div id="providersList" class="space-y-1">
+                        <!-- Providers will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm text-gray-400">API Status</span>
+                    <span id="apiStatusIndicator" class="provider-indicator disconnected"></span>
+                </div>
+                <button id="settingsBtn" class="w-full py-2 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center gap-2 transition-all">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                    Settings
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <div class="glass-effect p-4 border-b border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 id="projectTitle" class="text-xl font-semibold">AI Website Studio</h2>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span id="currentProvider" class="text-sm text-gray-400">Select a provider</span>
+                            <span id="providerStatus" class="text-xs px-2 py-1 bg-gray-700 rounded-full">Not connected</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="previewBtn" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg flex items-center gap-2 transition-all disabled:opacity-50" disabled>
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                            Preview
+                        </button>
+                        <button id="downloadBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center gap-2 transition-all disabled:opacity-50" disabled>
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            Download
+                        </button>
+                        <button id="deployBtn" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg flex items-center gap-2 transition-all">
+                            <i data-lucide="rocket" class="w-4 h-4"></i>
+                            Deploy
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Messages Area -->
+            <div id="messagesContainer" class="flex-1 overflow-y-auto scrollbar-thin p-6">
+                <div id="welcomeScreen" class="max-w-6xl mx-auto">
+                    <div class="text-center mb-16">
+                        <div class="inline-flex items-center gap-3 mb-6">
+                            <div class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center">
+                                <i data-lucide="code" class="w-8 h-8 text-white"></i>
+                            </div>
+                        </div>
+                        <h1 class="text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
+                            AI Website Studio
+                        </h1>
+                        <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                            Create stunning websites with natural language using advanced AI models
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                        <!-- Capability cards will be dynamically added here -->
+                    </div>
+                    
+                    <div class="text-center p-6 bg-yellow-900/20 border border-yellow-500/30 rounded-2xl">
+                        <i data-lucide="alert-circle" class="w-8 h-8 text-yellow-400 mx-auto mb-4"></i>
+                        <h3 class="text-lg font-semibold text-yellow-300 mb-2">API Configuration Required</h3>
+                        <p class="text-yellow-200/80 mb-4">
+                            Configure your AI provider API key to start creating websites
+                        </p>
+                        <button id="configureApiBtn" class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-all">
+                            Configure API Keys
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="messagesList" class="max-w-5xl mx-auto hidden">
+                    <!-- Messages will be dynamically added here -->
+                </div>
+            </div>
+            
+            <!-- Input Area -->
+            <div class="glass-effect p-4 border-t border-gray-700">
+                <div class="max-w-5xl mx-auto">
+                    <div class="flex items-end gap-3">
+                        <div class="flex gap-2">
+                            <button class="p-3 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-all">
+                                <i data-lucide="paperclip" class="w-5 h-5"></i>
+                            </button>
+                            <button class="p-3 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-all">
+                                <i data-lucide="mic" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        
+                        <textarea 
+                            id="messageInput" 
+                            class="flex-1 input-field resize-none min-h-[56px] max-h-[200px]" 
+                            placeholder="Describe the website you want to create..."
+                            rows="1"
+                            disabled
+                        ></textarea>
+                        
+                        <button id="sendBtn" class="p-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="apiWarning" class="text-center mt-2 text-sm text-yellow-400">
+                        Configure your API key to start creating
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+        <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-semibold flex items-center gap-2">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    API Configuration
+                </h2>
+                <button id="closeSettingsBtn" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-sm font-medium mb-3">AI Providers</h3>
+                    <div class="space-y-4">
+                        <div class="provider-config" data-provider="claude">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="flex items-center gap-2">
+                                    <span class="provider-indicator disconnected"></span>
+                                    <span>Claude</span>
+                                </label>
+                                <button class="test-api-btn text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded">Test</button>
+                            </div>
+                            <input type="password" class="api-key-input input-field" placeholder="Enter Claude API key">
+                            <div class="text-xs text-gray-400 mt-1">Get your API key from console.anthropic.com</div>
+                        </div>
+                        
+                        <div class="provider-config" data-provider="gemini">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="flex items-center gap-2">
+                                    <span class="provider-indicator disconnected"></span>
+                                    <span>Gemini</span>
+                                </label>
+                                <button class="test-api-btn text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded">Test</button>
+                            </div>
+                            <input type="password" class="api-key-input input-field" placeholder="Enter Gemini API key">
+                            <div class="text-xs text-gray-400 mt-1">Get your API key from makersuite.google.com/app/apikey</div>
+                        </div>
+                        
+                        <div class="provider-config" data-provider="groq">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="flex items-center gap-2">
+                                    <span class="provider-indicator disconnected"></span>
+                                    <span>Groq</span>
+                                </label>
+                                <button class="test-api-btn text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded">Test</button>
+                            </div>
+                            <input type="password" class="api-key-input input-field" placeholder="Enter Groq API key">
+                            <div class="text-xs text-gray-400 mt-1">Get your API key from console.groq.com</div>
+                        </div>
+                        
+                        <div class="provider-config" data-provider="zai">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="flex items-center gap-2">
+                                    <span class="provider-indicator disconnected"></span>
+                                    <span>Z.ai</span>
+                                </label>
+                                <button class="test-api-btn text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded">Test</button>
+                            </div>
+                            <input type="password" class="api-key-input input-field" placeholder="Enter Z.ai API key">
+                            <div class="text-xs text-gray-400 mt-1">Get your API key from z.ai</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-medium mb-3">Backend Configuration</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm mb-1">Backend URL</label>
+                            <input type="text" id="backendUrl" class="input-field" value="http://localhost:3001" placeholder="Enter backend URL">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 mt-8">
+                <button id="cancelSettingsBtn" class="flex-1 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-all">
+                    Cancel
+                </button>
+                <button id="saveSettingsBtn" class="flex-1 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg transition-all">
+                    Save & Encrypt
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Preview Modal -->
+    <div id="previewModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl w-[95vw] h-[95vh] flex flex-col">
+            <div class="flex items-center justify-between p-4 border-b">
+                <h3 class="font-semibold text-gray-900">Website Preview</h3>
+                <div class="flex gap-2">
+                    <button id="downloadFromPreviewBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        Download
+                    </button>
+                    <button id="closePreviewBtn" class="p-2 text-gray-500 hover:text-gray-700">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <iframe id="previewFrame" class="flex-1 w-full border-none" title="Website Preview"></iframe>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // App state
+        const state = {
+            messages: [],
+            projects: [],
+            currentProject: null,
+            selectedProvider: null,
+            apiKeys: {
+                claude: '',
+                gemini: '',
+                groq: '',
+                zai: ''
+            },
+            apiStatus: {
+                claude: false,
+                gemini: false,
+                groq: false,
+                zai: false
+            },
+            backendUrl: 'http://localhost:3001',
+            generatedWebsite: null,
+            isGenerating: false
+        };
+        
+        // DOM elements
+        const elements = {
+            messagesContainer: document.getElementById('messagesContainer'),
+            messagesList: document.getElementById('messagesList'),
+            welcomeScreen: document.getElementById('welcomeScreen'),
+            messageInput: document.getElementById('messageInput'),
+            sendBtn: document.getElementById('sendBtn'),
+            projectsList: document.getElementById('projectsList'),
+            providersList: document.getElementById('providersList'),
+            projectTitle: document.getElementById('projectTitle'),
+            currentProvider: document.getElementById('currentProvider'),
+            providerStatus: document.getElementById('providerStatus'),
+            apiStatusIndicator: document.getElementById('apiStatusIndicator'),
+            settingsModal: document.getElementById('settingsModal'),
+            settingsBtn: document.getElementById('settingsBtn'),
+            closeSettingsBtn: document.getElementById('closeSettingsBtn'),
+            saveSettingsBtn: document.getElementById('saveSettingsBtn'),
+            cancelSettingsBtn: document.getElementById('cancelSettingsBtn'),
+            configureApiBtn: document.getElementById('configureApiBtn'),
+            apiWarning: document.getElementById('apiWarning'),
+            previewBtn: document.getElementById('previewBtn'),
+            downloadBtn: document.getElementById('downloadBtn'),
+            deployBtn: document.getElementById('deployBtn'),
+            previewModal: document.getElementById('previewModal'),
+            previewFrame: document.getElementById('previewFrame'),
+            closePreviewBtn: document.getElementById('closePreviewBtn'),
+            downloadFromPreviewBtn: document.getElementById('downloadFromPreviewBtn'),
+            newProjectBtn: document.getElementById('newProjectBtn'),
+            backendUrlInput: document.getElementById('backendUrl')
+        };
+        
+        // Capabilities data
+        const capabilities = [
+            {
+                icon: 'rocket',
+                title: "SaaS Landing Pages",
+                description: "High-converting landing pages with modern design",
+                prompt: "Create a cutting-edge SaaS landing page with animated hero section, feature showcase, pricing tiers with hover effects, customer testimonials, and compelling call-to-action buttons. Include smooth scrolling navigation and mobile-responsive design.",
+                color: "from-blue-500 to-cyan-500"
+            },
+            {
+                icon: 'shopping-cart',
+                title: "E-commerce Stores",
+                description: "Complete online stores with advanced functionality",
+                prompt: "Build a modern e-commerce website with product grid, detailed product pages, shopping cart with animations, user reviews, search and filter functionality, and checkout process. Include responsive design and product image galleries.",
+                color: "from-green-500 to-emerald-500"
+            },
+            {
+                icon: 'palette',
+                title: "Creative Portfolios",
+                description: "Stunning portfolios with interactive galleries",
+                prompt: "Design a creative portfolio website with masonry image gallery, project case studies, smooth animations, about section with timeline, skills showcase, and contact form. Include dark/light mode toggle and artistic transitions.",
+                color: "from-purple-500 to-pink-500"
+            },
+            {
+                icon: 'building',
+                title: "Corporate Websites",
+                description: "Professional business sites with CMS features",
+                prompt: "Create a professional corporate website with executive team profiles, services showcase, company history timeline, blog section with categories, career pages, and multi-level navigation. Include SEO optimization and contact forms.",
+                color: "from-gray-600 to-gray-800"
+            },
+            {
+                icon: 'bar-chart-3',
+                title: "Analytics Dashboards",
+                description: "Interactive dashboards with real-time data",
+                prompt: "Build an advanced analytics dashboard with interactive charts, data visualization, real-time metrics, customizable widgets, data tables with sorting and filtering, and responsive sidebar navigation. Include dark theme.",
+                color: "from-orange-500 to-red-500"
+            },
+            {
+                icon: 'sparkles',
+                title: "Interactive Apps",
+                description: "Dynamic web applications with advanced features",
+                prompt: "Generate an interactive web application with user authentication UI, dynamic content management, advanced animations, form handling with validation, modal dialogs, and responsive components. Include loading states and error handling.",
+                color: "from-indigo-500 to-purple-500"
+            }
+        ];
+        
+        // Initialize the app
+        function init() {
+            // Load saved settings
+            loadSettings();
+            
+            // Render capabilities
+            renderCapabilities();
+            
+            // Render providers
+            renderProviders();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Check API status
+            updateApiStatus();
+        }
+        
+        // Load settings from localStorage
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('ajPersonalAgentSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                state.apiKeys = { ...state.apiKeys, ...settings.apiKeys };
+                state.backendUrl = settings.backendUrl || state.backendUrl;
+                elements.backendUrlInput.value = state.backendUrl;
+                
+                // Update API key inputs
+                document.querySelectorAll('.provider-config').forEach(config => {
+                    const provider = config.dataset.provider;
+                    const input = config.querySelector('.api-key-input');
+                    if (input) {
+                        input.value = state.apiKeys[provider] || '';
+                    }
+                });
+            }
+        }
+        
+        // Save settings to localStorage
+        function saveSettings() {
+            const settings = {
+                apiKeys: state.apiKeys,
+                backendUrl: state.backendUrl
+            };
+            localStorage.setItem('ajPersonalAgentSettings', JSON.stringify(settings));
+        }
+        
+        // Render capability cards
+        function renderCapabilities() {
+            const container = document.querySelector('#welcomeScreen .grid');
+            container.innerHTML = capabilities.map(capability => `
+                <div class="capability-card glass-effect p-6 rounded-2xl cursor-pointer" data-prompt="${capability.prompt}">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br ${capability.color} rounded-xl flex items-center justify-center">
+                            <i data-lucide="${capability.icon}" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">${capability.title}</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">${capability.description}</p>
+                    <button class="text-sm text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
+                        Use this template <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `).join('');
+            
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+            
+            // Add click event to capability cards
+            container.querySelectorAll('.capability-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const prompt = card.dataset.prompt;
+                    elements.messageInput.value = prompt;
+                    elements.messageInput.focus();
+                    showMessageScreen();
+                });
+            });
+        }
+        
+        // Render providers list
+        function renderProviders() {
+            const providers = [
+                { id: 'claude', name: 'Claude', icon: 'brain' },
+                { id: 'gemini', name: 'Gemini', icon: 'gem' },
+                { id: 'groq', name: 'Groq', icon: 'zap' },
+                { id: 'zai', name: 'Z.ai', icon: 'bot' }
+            ];
+            
+            elements.providersList.innerHTML = providers.map(provider => `
+                <div class="provider-item sidebar-item p-3 rounded-lg cursor-pointer flex items-center gap-3" data-provider="${provider.id}">
+                    <i data-lucide="${provider.icon}" class="w-4 h-4"></i>
+                    <span>${provider.name}</span>
+                    <span class="provider-indicator ${state.apiStatus[provider.id] ? 'connected' : 'disconnected'} ml-auto"></span>
+                </div>
+            `).join('');
+            
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+            
+            // Add click event to provider items
+            elements.providersList.querySelectorAll('.provider-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const provider = item.dataset.provider;
+                    selectProvider(provider);
+                });
+            });
+        }
+        
+        // Select a provider
+        function selectProvider(provider) {
+            state.selectedProvider = provider;
+            
+            // Update UI
+            elements.providersList.querySelectorAll('.provider-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            elements.providersList.querySelector(`[data-provider="${provider}"]`).classList.add('active');
+            
+            // Update header
+            const providerNames = {
+                claude: 'Claude',
+                gemini: 'Gemini',
+                groq: 'Groq',
+                zai: 'Z.ai'
+            };
+            
+            elements.currentProvider.textContent = providerNames[provider];
+            elements.providerStatus.textContent = state.apiStatus[provider] ? 'Connected' : 'Not connected';
+            elements.providerStatus.className = state.apiStatus[provider] 
+                ? 'text-xs px-2 py-1 bg-green-900/30 text-green-400 rounded-full' 
+                : 'text-xs px-2 py-1 bg-gray-700 rounded-full';
+            
+            // Enable input if connected
+            if (state.apiStatus[provider]) {
+                elements.messageInput.disabled = false;
+                elements.sendBtn.disabled = false;
+                elements.apiWarning.classList.add('hidden');
+            } else {
+                elements.messageInput.disabled = true;
+                elements.sendBtn.disabled = true;
+                elements.apiWarning.classList.remove('hidden');
+            }
+        }
+        
+        // Update API status
+        function updateApiStatus() {
+            let anyConnected = false;
+            
+            Object.keys(state.apiStatus).forEach(provider => {
+                if (state.apiStatus[provider]) {
+                    anyConnected = true;
+                }
+                
+                // Update provider indicators
+                const providerItem = elements.providersList.querySelector(`[data-provider="${provider}"]`);
+                if (providerItem) {
+                    const indicator = providerItem.querySelector('.provider-indicator');
+                    indicator.className = `provider-indicator ${state.apiStatus[provider] ? 'connected' : 'disconnected'}`;
+                }
+                
+                // Update settings modal indicators
+                const config = document.querySelector(`.provider-config[data-provider="${provider}"]`);
+                if (config) {
+                    const indicator = config.querySelector('.provider-indicator');
+                    indicator.className = `provider-indicator ${state.apiStatus[provider] ? 'connected' : 'disconnected'}`;
+                }
+            });
+            
+            // Update main status indicator
+            elements.apiStatusIndicator.className = `provider-indicator ${anyConnected ? 'connected' : 'disconnected'}`;
+            
+            // If no provider is selected but one is connected, select it
+            if (!state.selectedProvider && anyConnected) {
+                const firstConnected = Object.keys(state.apiStatus).find(p => state.apiStatus[p]);
+                if (firstConnected) {
+                    selectProvider(firstConnected);
+                }
+            }
+        }
+        
+        // Show message screen
+        function showMessageScreen() {
+            elements.welcomeScreen.classList.add('hidden');
+            elements.messagesList.classList.remove('hidden');
+            
+            // If no project is active, create one
+            if (!state.currentProject) {
+                createNewProject();
+            }
+        }
+        
+        // Show welcome screen
+        function showWelcomeScreen() {
+            elements.welcomeScreen.classList.remove('hidden');
+            elements.messagesList.classList.add('hidden');
+        }
+        
+        // Create a new project
+        function createNewProject() {
+            const project = {
+                id: Date.now(),
+                title: 'New Project',
+                messages: [],
+                provider: state.selectedProvider,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            };
+            
+            state.projects.unshift(project);
+            state.currentProject = project;
+            
+            // Update UI
+            updateProjectTitle();
+            renderProjects();
+        }
+        
+        // Update project title
+        function updateProjectTitle() {
+            if (state.currentProject) {
+                elements.projectTitle.textContent = state.currentProject.title;
+            } else {
+                elements.projectTitle.textContent = 'AI Website Studio';
+            }
+        }
+        
+        // Render projects list
+        function renderProjects() {
+            elements.projectsList.innerHTML = state.projects.slice(0, 8).map(project => `
+                <div class="project-item sidebar-item p-3 rounded-lg cursor-pointer flex items-center gap-3 ${state.currentProject?.id === project.id ? 'active' : ''}" data-id="${project.id}">
+                    <div class="w-2 h-2 rounded-full bg-indigo-500"></div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium truncate">${project.title}</p>
+                        <p class="text-xs text-gray-500">${project.messages.length} messages</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add click event to project items
+            elements.projectsList.querySelectorAll('.project-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const projectId = parseInt(item.dataset.id);
+                    const project = state.projects.find(p => p.id === projectId);
+                    if (project) {
+                        state.currentProject = project;
+                        state.messages = [...project.messages];
+                        updateProjectTitle();
+                        renderMessages();
+                        showMessageScreen();
+                        renderProjects();
+                    }
+                });
+            });
+        }
+        
+        // Render messages
+        function renderMessages() {
+            elements.messagesList.innerHTML = state.messages.map(message => `
+                <div class="flex gap-4 mb-6 ${message.type === 'user' ? 'justify-end' : ''}">
+                    ${message.type === 'assistant' ? `
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: ${getProviderColor(message.provider)}">
+                            ${getProviderIcon(message.provider)}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="max-w-[85%]">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-sm font-semibold">${message.type === 'user' ? 'You' : getProviderName(message.provider)}</span>
+                            <span class="text-xs text-gray-500">${formatTime(message.timestamp)}</span>
+                        </div>
+                        
+                        <div class="message-bubble ${message.type === 'user' ? 'user-message' : 'ai-message'}">
+                            <div class="whitespace-pre-wrap">${escapeHtml(message.content)}</div>
+                        </div>
+                    </div>
+                    
+                    ${message.type === 'user' ? `
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                            👤
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+            
+            // Scroll to bottom
+            elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
+        }
+        
+        // Add a message to the conversation
+        function addMessage(type, content, provider = null) {
+            const message = {
+                id: Date.now(),
+                type,
+                content,
+                provider: provider || state.selectedProvider,
+                timestamp: new Date()
+            };
+            
+            state.messages.push(message);
+            
+            // Update current project
+            if (state.currentProject) {
+                state.currentProject.messages.push(message);
+                state.currentProject.updatedAt = new Date();
+                renderProjects();
+            }
+            
+            renderMessages();
+            return message;
+        }
+        
+        // Send a message to the AI
+        async function sendMessage() {
+            const content = elements.messageInput.value.trim();
+            if (!content || state.isGenerating || !state.selectedProvider) return;
+            
+            // Clear input
+            elements.messageInput.value = '';
+            elements.messageInput.style.height = 'auto';
+            
+            // Add user message
+            addMessage('user', content);
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Set generating state
+            state.isGenerating = true;
+            elements.sendBtn.disabled = true;
+            
+            try {
+                // Prepare conversation history
+                const conversation = state.messages
+                    .filter(msg => msg.type === 'user' || msg.type === 'assistant')
+                    .map(msg => ({
+                        role: msg.type === 'user' ? 'user' : 'assistant',
+                        content: msg.content
+                    }));
+                
+                // Add current message
+                conversation.push({
+                    role: 'user',
+                    content: content
+                });
+                
+                // Call API
+                const response = await fetch(`${state.backendUrl}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages: conversation,
+                        provider: state.selectedProvider,
+                        apiKey: state.apiKeys[state.selectedProvider],
+                        options: {
+                            systemPrompt: `You are a world-class web developer and UI/UX expert. Create stunning, modern, and fully functional websites with:
+
+TECHNICAL REQUIREMENTS:
+- Complete HTML5 with semantic structure
+- Modern CSS3 with Flexbox/Grid, animations, and responsive design
+- Vanilla JavaScript with ES6+ features
+- Mobile-first responsive design (320px to 4K)
+- Cross-browser compatibility
+- Accessibility (WCAG 2.1 AA compliance)
+- SEO optimization with proper meta tags
+- Performance optimization
+
+DESIGN STANDARDS:
+- Modern, clean, and professional aesthetics
+- Consistent typography and spacing
+- Beautiful color palettes and gradients
+- Smooth animations and micro-interactions
+- Loading states and error handling
+- Interactive elements with hover effects
+- Professional imagery placeholders
+
+FUNCTIONALITY:
+- Form validation and submission
+- Dynamic content and interactivity
+- Smooth scrolling and navigation
+- Modal windows and overlays
+- Responsive navigation menus
+- Search functionality where applicable
+- Contact forms with validation
+
+Always provide complete, production-ready code that works immediately when opened in a browser.`
+                        }
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Add AI response
+                const aiMessage = addMessage('assistant', data.content);
+                
+                // Check if response contains HTML
+                if (data.content.includes('<html') || data.content.includes('<!DOCTYPE html')) {
+                    state.generatedWebsite = data.content;
+                    elements.previewBtn.disabled = false;
+                    elements.downloadBtn.disabled = false;
+                }
+                
+                // Update project title if it's the first message
+                if (state.currentProject && state.currentProject.title === 'New Project') {
+                    state.currentProject.title = content.slice(0, 30) + (content.length > 30 ? '...' : '');
+                    updateProjectTitle();
+                    renderProjects();
+                }
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Add error message
+                addMessage('assistant', `❌ **Error**: ${error.message}\n\n**Troubleshooting:**\n- Check your API key is valid\n- Ensure you have sufficient API credits\n- Try switching to a different AI provider\n- Check your internet connection`);
+            } finally {
+                // Reset generating state
+                state.isGenerating = false;
+                elements.sendBtn.disabled = false;
+            }
+        }
+        
+        // Show typing indicator
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'flex gap-4 mb-6';
+            typingDiv.innerHTML = `
+                <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: ${getProviderColor(state.selectedProvider)}">
+                    ${getProviderIcon(state.selectedProvider)}
+                </div>
+                <div class="message-bubble ai-message">
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+            elements.messagesList.appendChild(typingDiv);
+            elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
+        }
+        
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // Test API connection
+        async function testApiConnection(provider) {
+            const config = document.querySelector(`.provider-config[data-provider="${provider}"]`);
+            const input = config.querySelector('.api-key-input');
+            const apiKey = input.value.trim();
+            
+            if (!apiKey) {
+                alert('Please enter an API key');
+                return;
+            }
+            
+            // Save API key
+            state.apiKeys[provider] = apiKey;
+            
+            // Show loading state
+            const testBtn = config.querySelector('.test-api-btn');
+            const originalText = testBtn.textContent;
+            testBtn.textContent = 'Testing...';
+            testBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${state.backendUrl}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages: [{ role: 'user', content: 'Hello' }],
+                        provider,
+                        apiKey
+                    })
+                });
+                
+                if (response.ok) {
+                    state.apiStatus[provider] = true;
+                    updateApiStatus();
+                    
+                    // If this is the first connected provider, select it
+                    if (!state.selectedProvider) {
+                        selectProvider(provider);
+                    }
+                } else {
+                    state.apiStatus[provider] = false;
+                    updateApiStatus();
+                    alert('API connection failed. Please check your API key.');
+                }
+            } catch (error) {
+                console.error('API test error:', error);
+                state.apiStatus[provider] = false;
+                updateApiStatus();
+                alert('API connection failed. Please check your backend URL and API key.');
+            } finally {
+                testBtn.textContent = originalText;
+                testBtn.disabled = false;
+            }
+        }
+        
+        // Preview website
+        function previewWebsite() {
+            if (!state.generatedWebsite) return;
+            
+            elements.previewFrame.srcdoc = state.generatedWebsite;
+            elements.previewModal.classList.remove('hidden');
+            elements.previewModal.classList.add('flex');
+        }
+        
+        // Download website
+        function downloadWebsite() {
+            if (!state.generatedWebsite) return;
+            
+            const blob = new Blob([state.generatedWebsite], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `website-${Date.now()}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Send message
+            elements.sendBtn.addEventListener('click', sendMessage);
+            
+            // Enter key to send message
+            elements.messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Auto-resize textarea
+            elements.messageInput.addEventListener('input', () => {
+                elements.messageInput.style.height = 'auto';
+                elements.messageInput.style.height = Math.min(elements.messageInput.scrollHeight, 200) + 'px';
+            });
+            
+            // Settings modal
+            elements.settingsBtn.addEventListener('click', () => {
+                elements.settingsModal.classList.remove('hidden');
+                elements.settingsModal.classList.add('flex');
+            });
+            
+            elements.closeSettingsBtn.addEventListener('click', () => {
+                elements.settingsModal.classList.add('hidden');
+                elements.settingsModal.classList.remove('flex');
+            });
+            
+            elements.configureApiBtn.addEventListener('click', () => {
+                elements.settingsModal.classList.remove('hidden');
+                elements.settingsModal.classList.add('flex');
+            });
+            
+            elements.cancelSettingsBtn.addEventListener('click', () => {
+                elements.settingsModal.classList.add('hidden');
+                elements.settingsModal.classList.remove('flex');
+            });
+            
+            elements.saveSettingsBtn.addEventListener('click', () => {
+                // Save API keys
+                document.querySelectorAll('.provider-config').forEach(config => {
+                    const provider = config.dataset.provider;
+                    const input = config.querySelector('.api-key-input');
+                    state.apiKeys[provider] = input.value;
+                });
+                
+                // Save backend URL
+                state.backendUrl = elements.backendUrlInput.value;
+                
+                // Save to localStorage
+                saveSettings();
+                
+                // Close modal
+                elements.settingsModal.classList.add('hidden');
+                elements.settingsModal.classList.remove('flex');
+                
+                // Update API status
+                updateApiStatus();
+            });
+            
+            // Test API buttons
+            document.querySelectorAll('.test-api-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const config = btn.closest('.provider-config');
+                    const provider = config.dataset.provider;
+                    testApiConnection(provider);
+                });
+            });
+            
+            // Preview modal
+            elements.previewBtn.addEventListener('click', previewWebsite);
+            elements.downloadBtn.addEventListener('click', downloadWebsite);
+            
+            elements.closePreviewBtn.addEventListener('click', () => {
+                elements.previewModal.classList.add('hidden');
+                elements.previewModal.classList.remove('flex');
+            });
+            
+            elements.downloadFromPreviewBtn.addEventListener('click', () => {
+                downloadWebsite();
+                elements.previewModal.classList.add('hidden');
+                elements.previewModal.classList.remove('flex');
+            });
+            
+            // New project button
+            elements.newProjectBtn.addEventListener('click', () => {
+                state.currentProject = null;
+                state.messages = [];
+                state.generatedWebsite = null;
+                elements.previewBtn.disabled = true;
+                elements.downloadBtn.disabled = true;
+                showWelcomeScreen();
+            });
+            
+            // Deploy button
+            elements.deployBtn.addEventListener('click', () => {
+                alert('Deploy functionality would be implemented here. This would integrate with hosting services like Vercel, Netlify, etc.');
+            });
+        }
+        
+        // Helper functions
+        function getProviderColor(provider) {
+            const colors = {
+                claude: '#8B5CF6',
+                gemini: '#4285F4',
+                groq: '#FF6B35',
+                zai: '#10B981'
+            };
+            return colors[provider] || '#6366f1';
+        }
+        
+        function getProviderIcon(provider) {
+            const icons = {
+                claude: '🧠',
+                gemini: '💎',
+                groq: '⚡',
+                zai: '🤖'
+            };
+            return icons[provider] || '🤖';
+        }
+        
+        function getProviderName(provider) {
+            const names = {
+                claude: 'Claude',
+                gemini: 'Gemini',
+                groq: 'Groq',
+                zai: 'Z.ai'
+            };
+            return names[provider] || 'AI';
+        }
+        
+        function formatTime(date) {
+            return new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
