@@ -56,10 +56,38 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/ai', require('./routes/aiRoutes'));
 app.use('/api/files', require('./routes/fileRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));
+// Add this after your other routes but before error handlers
+
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    message: 'AJ PERSONAL AGENT Backend API',
+    status: 'Running',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      chat: '/api/ai/chat',
+      generateWebsite: '/api/ai/generate-website',
+      projects: '/api/projects',
+      files: '/api/files'
+    }
+  });
+});
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    database: dbStatus,
+    uptime: process.uptime()
+  });
 });
 
 // Error handling middleware
