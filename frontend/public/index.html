@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <meta name="google-signin-client_id" content="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="1068968480074-dgsmpq104mmqsqr1ckhcfcn54gpnrk5l.apps.googleusercontent.com">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
@@ -28,7 +28,7 @@
         body {
             background: #0a0a0a;
             color: #e5e7eb;
-            overflow: hidden;
+            overflow-x: hidden;
         }
         
         .gradient-bg {
@@ -422,7 +422,7 @@
         /* Template Gallery Styles */
         .template-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 24px;
         }
         
@@ -443,7 +443,7 @@
         
         .template-image {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
             transition: transform 0.4s ease;
         }
@@ -840,6 +840,10 @@
             .template-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .stats-card {
+                margin-bottom: 16px;
+            }
         }
         
         @media (min-width: 769px) {
@@ -976,6 +980,8 @@
             display: flex;
             border-bottom: 2px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 24px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         .tab {
@@ -985,6 +991,7 @@
             transition: all 0.3s ease;
             border-bottom: 3px solid transparent;
             margin-bottom: -2px;
+            white-space: nowrap;
         }
         
         .tab:hover {
@@ -1025,6 +1032,58 @@
         .fab:hover {
             transform: scale(1.1);
             box-shadow: 0 12px 32px rgba(99, 102, 241, 0.5);
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 640px) {
+            .message-bubble {
+                max-width: 95%;
+                font-size: 14px;
+            }
+            
+            .capability-card {
+                padding: 16px;
+            }
+            
+            .template-card {
+                margin-bottom: 16px;
+            }
+            
+            .stats-card {
+                padding: 16px;
+            }
+            
+            .ai-setting {
+                padding: 16px;
+            }
+            
+            .export-option {
+                padding: 16px;
+            }
+            
+            .history-item {
+                padding: 12px 16px;
+            }
+            
+            .modal-overlay > div {
+                width: 95%;
+                max-height: 95vh;
+                padding: 16px;
+            }
+            
+            .fab {
+                bottom: 16px;
+                right: 16px;
+                width: 48px;
+                height: 48px;
+            }
+        }
+        
+        /* Touch-friendly buttons */
+        @media (hover: none) {
+            .btn-primary, .btn-secondary, .sidebar-item, .capability-card, .template-card, .export-option, .history-item, .fab {
+                -webkit-tap-highlight-color: rgba(99, 102, 241, 0.3);
+            }
         }
     </style>
 </head>
@@ -1137,7 +1196,7 @@
             <div class="p-4 border-t border-gray-800">
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-sm text-gray-400">System Status</span>
-                    <span id="apiStatusIndicator" class="provider-indicator disconnected"></span>
+                    <span id="apiStatusIndicator" class="provider-indicator connected"></span>
                 </div>
                 <button id="settingsBtn" class="w-full py-3 bg-gray-800 hover:bg-gray-700 rounded-xl flex items-center justify-center gap-2 transition-all font-semibold">
                     <i data-lucide="settings" class="w-5 h-5"></i>
@@ -1167,8 +1226,8 @@
                     <div>
                         <h2 id="projectTitle" class="text-2xl font-bold mb-1">AI Website Studio</h2>
                         <div class="flex items-center gap-3">
-                            <span id="currentProvider" class="text-sm text-gray-400">Select a provider</span>
-                            <span id="providerStatus" class="text-xs px-3 py-1 bg-gray-800 rounded-full">Not connected</span>
+                            <span id="currentProvider" class="text-sm text-gray-400">Claude</span>
+                            <span id="providerStatus" class="text-xs px-3 py-1 bg-green-900/30 text-green-400 rounded-full">Connected</span>
                             <div class="flex items-center gap-2">
                                 <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                                 <span class="text-xs text-gray-400">Real-time</span>
@@ -1259,25 +1318,6 @@
                         <!-- Capability cards will be dynamically added here -->
                     </div>
                     
-                    <!-- API Configuration Alert -->
-                    <div id="apiConfigAlert" class="glass-effect-light p-8 rounded-2xl border border-yellow-500/30">
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i data-lucide="alert-triangle" class="w-6 h-6 text-yellow-400"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="text-xl font-semibold text-yellow-300 mb-2">API Configuration Required</h3>
-                                <p class="text-yellow-200/80 mb-4 leading-relaxed">
-                                    Configure your AI provider API key to start creating websites. 
-                                    We support multiple providers including Claude, Gemini, Groq, and Z.ai.
-                                </p>
-                                <button id="configureApiBtn" class="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-white rounded-xl transition-all font-semibold shadow-lg">
-                                    Configure API Keys
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <!-- Suggestion Chips -->
                     <div class="mt-16">
                         <h3 class="text-2xl font-bold mb-6 text-center">Try these suggestions</h3>
@@ -1351,16 +1391,11 @@
                             class="flex-1 input-field resize-none min-h-[64px] max-h-[200px]" 
                             placeholder="Describe the website you want to create..."
                             rows="1"
-                            disabled
                         ></textarea>
                         
                         <button id="sendBtn" class="p-4 primary-gradient hover:opacity-90 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg">
                             <i data-lucide="send" class="w-6 h-6"></i>
                         </button>
-                    </div>
-                    
-                    <div id="apiWarning" class="text-center mt-3 text-sm text-yellow-400 font-semibold">
-                        Configure your API key to start creating
                     </div>
                 </div>
             </div>
@@ -1383,86 +1418,14 @@
             <div class="space-y-8">
                 <!-- Tabs -->
                 <div class="tab-container">
-                    <button class="tab active" data-tab="api">API Configuration</button>
-                    <button class="tab" data-tab="ai">AI Settings</button>
+                    <button class="tab active" data-tab="ai">AI Settings</button>
                     <button class="tab" data-tab="account">Account</button>
                     <button class="tab" data-tab="export">Export & Deploy</button>
                     <button class="tab" data-tab="team">Team</button>
                 </div>
                 
-                <!-- API Configuration Tab -->
-                <div id="apiTab" class="tab-content">
-                    <div class="space-y-6">
-                        <div class="provider-config" data-provider="claude">
-                            <div class="flex items-center justify-between mb-3">
-                                <label class="flex items-center gap-3">
-                                    <span class="provider-indicator disconnected"></span>
-                                    <span class="font-semibold">Claude by Anthropic</span>
-                                </label>
-                                <button class="test-api-btn px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-semibold">Test Connection</button>
-                            </div>
-                            <input type="password" class="api-key-input input-field" placeholder="Enter Claude API key">
-                            <div class="text-sm text-gray-400 mt-2">Get your API key from console.anthropic.com</div>
-                        </div>
-                        
-                        <div class="provider-config" data-provider="gemini">
-                            <div class="flex items-center justify-between mb-3">
-                                <label class="flex items-center gap-3">
-                                    <span class="provider-indicator disconnected"></span>
-                                    <span class="font-semibold">Gemini by Google</span>
-                                </label>
-                                <button class="test-api-btn px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-semibold">Test Connection</button>
-                            </div>
-                            <input type="password" class="api-key-input input-field" placeholder="Enter Gemini API key">
-                            <div class="text-sm text-gray-400 mt-2">Get your API key from makersuite.google.com/app/apikey</div>
-                        </div>
-                        
-                        <div class="provider-config" data-provider="groq">
-                            <div class="flex items-center justify-between mb-3">
-                                <label class="flex items-center gap-3">
-                                    <span class="provider-indicator disconnected"></span>
-                                    <span class="font-semibold">Groq</span>
-                                </label>
-                                <button class="test-api-btn px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-semibold">Test Connection</button>
-                            </div>
-                            <input type="password" class="api-key-input input-field" placeholder="Enter Groq API key">
-                            <div class="text-sm text-gray-400 mt-2">Get your API key from console.groq.com</div>
-                        </div>
-                        
-                        <div class="provider-config" data-provider="zai">
-                            <div class="flex items-center justify-between mb-3">
-                                <label class="flex items-center gap-3">
-                                    <span class="provider-indicator disconnected"></span>
-                                    <span class="font-semibold">Z.ai</span>
-                                </label>
-                                <button class="test-api-btn px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-semibold">Test Connection</button>
-                            </div>
-                            <input type="password" class="api-key-input input-field" placeholder="Enter Z.ai API key">
-                            <div class="text-sm text-gray-400 mt-2">Get your API key from z.ai</div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-8">
-                        <h3 class="text-lg font-semibold mb-4">Backend Configuration</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-semibold mb-2">Backend URL</label>
-                                <input type="text" id="backendUrl" class="input-field" value="https://aj-studioz-agent.onrender.com" placeholder="Enter backend URL">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold mb-2">Environment</label>
-                                <select class="input-field">
-                                    <option>Production</option>
-                                    <option>Development</option>
-                                    <option>Staging</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
                 <!-- AI Settings Tab -->
-                <div id="aiTab" class="tab-content hidden">
+                <div id="aiTab" class="tab-content">
                     <div class="space-y-8">
                         <div class="ai-setting">
                             <label class="ai-setting-label">Creativity Level</label>
@@ -1845,18 +1808,18 @@
             messages: [],
             projects: [],
             currentProject: null,
-            selectedProvider: null,
+            selectedProvider: 'claude',
             apiKeys: {
-                claude: '',
-                gemini: '',
-                groq: '',
-                zai: ''
+                claude: process.env.CLAUDE_API_KEY || 'sk-ant-api03-EXAMPLE_KEY',
+                gemini: process.env.GEMINI_API_KEY || 'AIzaSyEXAMPLE_KEY',
+                groq: process.env.GROQ_API_KEY || 'gsk_EXAMPLE_KEY',
+                zai: process.env.ZAI_API_KEY || 'EXAMPLE_KEY'
             },
             apiStatus: {
-                claude: false,
-                gemini: false,
-                groq: false,
-                zai: false
+                claude: true,
+                gemini: true,
+                groq: true,
+                zai: true
             },
             backendUrl: 'https://aj-studioz-agent.onrender.com',
             generatedWebsite: null,
@@ -1902,9 +1865,6 @@
             closeSettingsBtn: document.getElementById('closeSettingsBtn'),
             saveSettingsBtn: document.getElementById('saveSettingsBtn'),
             cancelSettingsBtn: document.getElementById('cancelSettingsBtn'),
-            configureApiBtn: document.getElementById('configureApiBtn'),
-            apiConfigAlert: document.getElementById('apiConfigAlert'),
-            apiWarning: document.getElementById('apiWarning'),
             previewBtn: document.getElementById('previewBtn'),
             downloadBtn: document.getElementById('downloadBtn'),
             deployBtn: document.getElementById('deployBtn'),
@@ -2050,6 +2010,9 @@
             
             // Initialize real-time updates
             initializeRealTimeUpdates();
+            
+            // Set default provider
+            selectProvider('claude');
         }
         
         // Load settings from localStorage
@@ -2057,20 +2020,10 @@
             const savedSettings = localStorage.getItem('ajPersonalAgentSettings');
             if (savedSettings) {
                 const settings = JSON.parse(savedSettings);
-                state.apiKeys = { ...state.apiKeys, ...settings.apiKeys };
                 state.backendUrl = settings.backendUrl || state.backendUrl;
                 state.darkMode = settings.darkMode !== undefined ? settings.darkMode : true;
                 state.aiSettings = { ...state.aiSettings, ...settings.aiSettings };
                 elements.backendUrlInput.value = state.backendUrl;
-                
-                // Update API key inputs
-                document.querySelectorAll('.provider-config').forEach(config => {
-                    const provider = config.dataset.provider;
-                    const input = config.querySelector('.api-key-input');
-                    if (input) {
-                        input.value = state.apiKeys[provider] || '';
-                    }
-                });
                 
                 // Update AI settings
                 elements.creativitySlider.value = state.aiSettings.creativity;
@@ -2091,7 +2044,6 @@
         // Save settings to localStorage
         function saveSettings() {
             const settings = {
-                apiKeys: state.apiKeys,
                 backendUrl: state.backendUrl,
                 darkMode: state.darkMode,
                 aiSettings: state.aiSettings
@@ -2344,7 +2296,7 @@
             ];
             
             elements.providersList.innerHTML = providers.map(provider => `
-                <div class="provider-item sidebar-item p-4 rounded-xl cursor-pointer flex items-center gap-3" data-provider="${provider.id}">
+                <div class="provider-item sidebar-item p-4 rounded-xl cursor-pointer flex items-center gap-3 ${state.selectedProvider === provider.id ? 'active' : ''}" data-provider="${provider.id}">
                     <i data-lucide="${provider.icon}" class="w-5 h-5"></i>
                     <span class="font-semibold">${provider.name}</span>
                     <span class="provider-indicator ${state.apiStatus[provider.id] ? 'connected' : 'disconnected'} ml-auto"></span>
@@ -2420,13 +2372,9 @@
             if (state.apiStatus[provider]) {
                 elements.messageInput.disabled = false;
                 elements.sendBtn.disabled = false;
-                elements.apiWarning.classList.add('hidden');
-                elements.apiConfigAlert.classList.add('hidden');
             } else {
                 elements.messageInput.disabled = true;
                 elements.sendBtn.disabled = true;
-                elements.apiWarning.classList.remove('hidden');
-                elements.apiConfigAlert.classList.remove('hidden');
             }
         }
         
@@ -2445,25 +2393,10 @@
                     const indicator = providerItem.querySelector('.provider-indicator');
                     indicator.className = `provider-indicator ${state.apiStatus[provider] ? 'connected' : 'disconnected'}`;
                 }
-                
-                // Update settings modal indicators
-                const config = document.querySelector(`.provider-config[data-provider="${provider}"]`);
-                if (config) {
-                    const indicator = config.querySelector('.provider-indicator');
-                    indicator.className = `provider-indicator ${state.apiStatus[provider] ? 'connected' : 'disconnected'}`;
-                }
             });
             
             // Update main status indicator
             elements.apiStatusIndicator.className = `provider-indicator ${anyConnected ? 'connected' : 'disconnected'}`;
-            
-            // If no provider is selected but one is connected, select it
-            if (!state.selectedProvider && anyConnected) {
-                const firstConnected = Object.keys(state.apiStatus).find(p => state.apiStatus[p]);
-                if (firstConnected) {
-                    selectProvider(firstConnected);
-                }
-            }
         }
         
         // Show message screen
@@ -2771,7 +2704,7 @@ Always provide complete, production-ready code that works immediately when opene
                 removeTypingIndicator();
                 
                 // Add error message
-                addMessage('assistant', `❌ **Error**: ${error.message}\n\n**Troubleshooting:**\n- Check your API key is valid\n- Ensure you have sufficient API credits\n- Try switching to a different AI provider\n- Check your internet connection`);
+                addMessage('assistant', `❌ **Error**: ${error.message}\n\n**Troubleshooting:**\n- Check your internet connection\n- Try switching to a different AI provider\n- Contact support if the issue persists`);
             } finally {
                 // Reset generating state
                 state.isGenerating = false;
@@ -2808,65 +2741,6 @@ Always provide complete, production-ready code that works immediately when opene
             const typingIndicator = document.getElementById('typingIndicator');
             if (typingIndicator) {
                 typingIndicator.remove();
-            }
-        }
-        
-        // Test API connection
-        async function testApiConnection(provider) {
-            const config = document.querySelector(`.provider-config[data-provider="${provider}"]`);
-            const input = config.querySelector('.api-key-input');
-            const apiKey = input.value.trim();
-            
-            if (!apiKey) {
-                showNotification('Please enter an API key', 'error');
-                return;
-            }
-            
-            // Save API key
-            state.apiKeys[provider] = apiKey;
-            
-            // Show loading state
-            const testBtn = config.querySelector('.test-api-btn');
-            const originalText = testBtn.textContent;
-            testBtn.innerHTML = '<div class="loading-spinner"></div>';
-            testBtn.disabled = true;
-            
-            try {
-                const response = await fetch(`${state.backendUrl}/api/chat`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        messages: [{ role: 'user', content: 'Hello' }],
-                        provider,
-                        apiKey
-                    })
-                });
-                
-                if (response.ok) {
-                    state.apiStatus[provider] = true;
-                    updateApiStatus();
-                    
-                    // If this is the first connected provider, select it
-                    if (!state.selectedProvider) {
-                        selectProvider(provider);
-                    }
-                    
-                    showNotification(`${provider} API connection successful!`, 'success');
-                } else {
-                    state.apiStatus[provider] = false;
-                    updateApiStatus();
-                    showNotification('API connection failed. Please check your API key.', 'error');
-                }
-            } catch (error) {
-                console.error('API test error:', error);
-                state.apiStatus[provider] = false;
-                updateApiStatus();
-                showNotification('API connection failed. Please check your backend URL and API key.', 'error');
-            } finally {
-                testBtn.textContent = originalText;
-                testBtn.disabled = false;
             }
         }
         
@@ -2982,7 +2856,6 @@ Always provide complete, production-ready code that works immediately when opene
             const data = {
                 projects: state.projects,
                 settings: {
-                    apiKeys: state.apiKeys,
                     backendUrl: state.backendUrl,
                     darkMode: state.darkMode,
                     aiSettings: state.aiSettings
@@ -3296,24 +3169,12 @@ Always provide complete, production-ready code that works immediately when opene
                 elements.settingsModal.classList.remove('flex');
             });
             
-            elements.configureApiBtn.addEventListener('click', () => {
-                elements.settingsModal.classList.remove('hidden');
-                elements.settingsModal.classList.add('flex');
-            });
-            
             elements.cancelSettingsBtn.addEventListener('click', () => {
                 elements.settingsModal.classList.add('hidden');
                 elements.settingsModal.classList.remove('flex');
             });
             
             elements.saveSettingsBtn.addEventListener('click', () => {
-                // Save API keys
-                document.querySelectorAll('.provider-config').forEach(config => {
-                    const provider = config.dataset.provider;
-                    const input = config.querySelector('.api-key-input');
-                    state.apiKeys[provider] = input.value;
-                });
-                
                 // Save backend URL
                 state.backendUrl = elements.backendUrlInput.value;
                 
@@ -3335,19 +3196,7 @@ Always provide complete, production-ready code that works immediately when opene
                 elements.settingsModal.classList.add('hidden');
                 elements.settingsModal.classList.remove('flex');
                 
-                // Update API status
-                updateApiStatus();
-                
                 showNotification('Settings saved successfully!', 'success');
-            });
-            
-            // Test API buttons
-            document.querySelectorAll('.test-api-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const config = btn.closest('.provider-config');
-                    const provider = config.dataset.provider;
-                    testApiConnection(provider);
-                });
             });
             
             // Preview modal
@@ -3542,6 +3391,14 @@ Always provide complete, production-ready code that works immediately when opene
             // FAB button
             elements.fabBtn.addEventListener('click', () => {
                 showNotification('Help & Support: Contact us at support@ajstudioz.com', 'info');
+            });
+            
+            // Handle window resize for responsive behavior
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768) {
+                    elements.sidebar.classList.remove('open');
+                    elements.mobileOverlay.classList.remove('active');
+                }
             });
         }
         
