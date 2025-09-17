@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AJ PERSONAL AGENT - AI Website Studio | Powered by AJ STUDIOZ</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='a' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%236366f1'/><stop offset='100%' style='stop-color:%238b5cf6'/></linearGradient></defs><rect width='100' height='100' rx='20' fill='url(%23a)'/><text x='50' y='65' font-size='50' fill='white' text-anchor='middle'>🤖</text></svg>">
+    <link rel="icon" type="image/png" href="https://z-cdn-media.chatglm.cn/files/cdea4a84-a599-4b6f-813e-2bedad5aa9ca_favicon.png?auth_key=1789662740-5a30acd62ce14cbd98822ab2ae2739ff-0-a629102ab0c97b5e0663df3a22a2d316">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -29,6 +29,8 @@
             background: #0a0a0a;
             color: #e5e7eb;
             overflow-x: hidden;
+            margin: 0;
+            padding: 0;
         }
         
         .gradient-bg {
@@ -104,17 +106,6 @@
                 transform: scale(1);
                 opacity: 1;
             }
-        }
-        
-        .capability-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .capability-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            border-color: rgba(99, 102, 241, 0.5);
         }
         
         .sidebar-item {
@@ -244,7 +235,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
             background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 100%);
             display: flex;
             flex-direction: column;
@@ -270,6 +261,13 @@
             margin-bottom: 32px;
             animation: float 3s ease-in-out infinite;
             box-shadow: 0 20px 60px rgba(99, 102, 241, 0.4);
+            overflow: hidden;
+        }
+        
+        .splash-logo img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
         }
         
         @keyframes float {
@@ -1041,14 +1039,6 @@
                 font-size: 14px;
             }
             
-            .capability-card {
-                padding: 16px;
-            }
-            
-            .template-card {
-                margin-bottom: 16px;
-            }
-            
             .stats-card {
                 padding: 16px;
             }
@@ -1081,17 +1071,433 @@
         
         /* Touch-friendly buttons */
         @media (hover: none) {
-            .btn-primary, .btn-secondary, .sidebar-item, .capability-card, .template-card, .export-option, .history-item, .fab {
+            .btn-primary, .btn-secondary, .sidebar-item, .template-card, .export-option, .history-item, .fab {
                 -webkit-tap-highlight-color: rgba(99, 102, 241, 0.3);
+            }
+        }
+        
+        /* ChatGPT-like UI */
+        .chat-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .chat-sidebar {
+            width: 260px;
+            background: #171717;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+        
+        .chat-sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chat-sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .chat-sidebar-logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+        
+        .chat-sidebar-logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+        
+        .chat-new-chat-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #e5e7eb;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .chat-new-chat-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .chat-sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        
+        .chat-sidebar-section {
+            margin-bottom: 16px;
+        }
+        
+        .chat-sidebar-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #9ca3af;
+            margin: 8px 12px;
+            text-transform: uppercase;
+        }
+        
+        .chat-history-item {
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+        
+        .chat-history-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .chat-history-item.active {
+            background: rgba(99, 102, 241, 0.2);
+        }
+        
+        .chat-history-item-icon {
+            width: 20px;
+            height: 20px;
+            color: #9ca3af;
+        }
+        
+        .chat-history-item-text {
+            flex: 1;
+            font-size: 14px;
+            color: #e5e7eb;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .chat-sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chat-user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .chat-user-menu:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .chat-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .chat-user-info {
+            flex: 1;
+        }
+        
+        .chat-user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #e5e7eb;
+        }
+        
+        .chat-user-email {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #0a0a0a;
+        }
+        
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chat-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #e5e7eb;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .chat-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .chat-action-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e5e7eb;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .chat-welcome {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .chat-welcome-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #e5e7eb;
+            margin-bottom: 16px;
+        }
+        
+        .chat-welcome-subtitle {
+            font-size: 18px;
+            color: #9ca3af;
+            margin-bottom: 32px;
+        }
+        
+        .chat-welcome-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 32px;
+        }
+        
+        .chat-welcome-example {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+        
+        .chat-welcome-example:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .chat-welcome-example-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #e5e7eb;
+            margin-bottom: 8px;
+        }
+        
+        .chat-welcome-example-text {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+        
+        .chat-message {
+            display: flex;
+            gap: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .chat-message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .chat-message-user {
+            background: var(--primary-gradient);
+            color: white;
+        }
+        
+        .chat-message-assistant {
+            background: #171717;
+            color: #e5e7eb;
+        }
+        
+        .chat-message-content {
+            flex: 1;
+        }
+        
+        .chat-message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .chat-message-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .chat-message-time {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        
+        .chat-message-text {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #e5e7eb;
+        }
+        
+        .chat-input-container {
+            padding: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chat-input-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .chat-input {
+            width: 100%;
+            padding: 16px 48px 16px 16px;
+            background: #171717;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #e5e7eb;
+            font-size: 16px;
+            resize: none;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        
+        .chat-input:focus {
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .chat-input-actions {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .chat-input-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .chat-input-action:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e5e7eb;
+        }
+        
+        .chat-send-btn {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .chat-send-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        @media (max-width: 768px) {
+            .chat-sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 50;
+                transform: translateX(-100%);
+            }
+            
+            .chat-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .chat-main {
+                margin-left: 0;
+            }
+            
+            .chat-welcome-examples {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
-<body class="gradient-bg text-gray-200 h-screen overflow-hidden">
+<body class="gradient-bg text-gray-200">
     <!-- Splash Screen -->
     <div id="splashScreen" class="splash-screen">
         <div class="splash-logo">
-            <span style="font-size: 70px;">🤖</span>
+            <img src="https://z-cdn-media.chatglm.cn/files/cdea4a84-a599-4b6f-813e-2bedad5aa9ca_favicon.png?auth_key=1789662740-5a30acd62ce14cbd98822ab2ae2739ff-0-a629102ab0c97b5e0663df3a22a2d316" alt="AJ Logo">
         </div>
         <h1 class="splash-title">AJ PERSONAL AGENT</h1>
         <p class="splash-subtitle">Powered by AJ STUDIOZ</p>
@@ -1103,300 +1509,132 @@
     <!-- Mobile Menu Overlay -->
     <div id="mobileOverlay" class="mobile-overlay fixed inset-0 bg-black/80 z-40 md:hidden"></div>
     
-    <div class="flex h-full">
+    <!-- Chat Container -->
+    <div id="chatContainer" class="chat-container" style="display: none;">
         <!-- Sidebar -->
-        <div id="sidebar" class="sidebar w-72 glass-effect flex flex-col mobile-menu md:relative md:translate-x-0 z-50">
-            <div class="p-6 border-b border-gray-800">
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 primary-gradient rounded-xl flex items-center justify-center shadow-lg">
-                        <i data-lucide="bot" class="w-7 h-7 text-white"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-xl">AJ PERSONAL AGENT</h1>
-                        <p class="text-xs text-gray-400">Powered by AJ STUDIOZ</p>
-                    </div>
+        <div id="chatSidebar" class="chat-sidebar mobile-menu">
+            <div class="chat-sidebar-header">
+                <div class="chat-sidebar-logo">
+                    <img src="https://z-cdn-media.chatglm.cn/files/cdea4a84-a599-4b6f-813e-2bedad5aa9ca_favicon.png?auth_key=1789662740-5a30acd62ce14cbd98822ab2ae2739ff-0-a629102ab0c97b5e0663df3a22a2d316" alt="AJ Logo">
+                    <div class="chat-sidebar-logo-text">AJ STUDIOZ</div>
                 </div>
-                
-                <!-- User Authentication Section -->
-                <div id="authSection" class="mb-6">
-                    <!-- Not logged in state -->
-                    <div id="notLoggedIn" class="space-y-4">
-                        <p class="text-sm text-gray-400">Sign in to save your projects and access premium features</p>
-                        <div id="googleSignInBtn" class="w-full py-3 bg-white hover:bg-gray-100 text-gray-800 rounded-xl flex items-center justify-center gap-3 transition-all font-semibold shadow-lg">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24">
-                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                            </svg>
-                            Continue with Google
-                        </div>
-                    </div>
-                    
-                    <!-- Logged in state -->
-                    <div id="loggedIn" class="hidden space-y-4">
-                        <div class="flex items-center gap-4">
-                            <img id="userAvatar" class="user-avatar" src="" alt="User">
-                            <div class="flex-1 min-w-0">
-                                <p id="userName" class="text-sm font-semibold truncate"></p>
-                                <p id="userEmail" class="text-xs text-gray-400 truncate"></p>
-                            </div>
-                            <button id="signOutBtn" class="text-gray-400 hover:text-white transition-all">
-                                <i data-lucide="log-out" class="w-5 h-5"></i>
-                            </button>
-                        </div>
-                        
-                        <!-- User Stats -->
-                        <div class="grid grid-cols-3 gap-2">
-                            <div class="text-center p-2 bg-gray-800 rounded-lg">
-                                <p class="text-lg font-bold" id="userProjects">0</p>
-                                <p class="text-xs text-gray-400">Projects</p>
-                            </div>
-                            <div class="text-center p-2 bg-gray-800 rounded-lg">
-                                <p class="text-lg font-bold" id="userMessages">0</p>
-                                <p class="text-xs text-gray-400">Messages</p>
-                            </div>
-                            <div class="text-center p-2 bg-gray-800 rounded-lg">
-                                <p class="text-lg font-bold" id="userApiCalls">0</p>
-                                <p class="text-xs text-gray-400">API Calls</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <button id="newProjectBtn" class="w-full py-3 primary-gradient hover:opacity-90 rounded-xl flex items-center justify-center gap-2 transition-all font-semibold shadow-lg">
-                    <i data-lucide="plus" class="w-5 h-5"></i>
-                    New Project
+                <button id="chatNewChatBtn" class="chat-new-chat-btn">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    New Chat
                 </button>
             </div>
             
-            <div class="flex-1 overflow-y-auto scrollbar-thin p-4">
-                <div class="mb-6">
-                    <h3 class="text-xs uppercase tracking-wider text-gray-400 mb-3 px-2 font-semibold">Projects</h3>
-                    <div id="projectsList" class="space-y-2">
-                        <!-- Projects will be dynamically added here -->
+            <div class="chat-sidebar-content">
+                <div class="chat-sidebar-section">
+                    <div class="chat-sidebar-section-title">Today</div>
+                    <div id="todayHistory" class="space-y-1">
+                        <!-- Today's history items will be added here -->
                     </div>
                 </div>
                 
-                <div class="mb-6">
-                    <h3 class="text-xs uppercase tracking-wider text-gray-400 mb-3 px-2 font-semibold">AI Providers</h3>
-                    <div id="providersList" class="space-y-2">
-                        <!-- Providers will be dynamically added here -->
+                <div class="chat-sidebar-section">
+                    <div class="chat-sidebar-section-title">Yesterday</div>
+                    <div id="yesterdayHistory" class="space-y-1">
+                        <!-- Yesterday's history items will be added here -->
                     </div>
                 </div>
                 
-                <div class="mb-6">
-                    <h3 class="text-xs uppercase tracking-wider text-gray-400 mb-3 px-2 font-semibold">Recent History</h3>
-                    <div id="historyList" class="space-y-2">
-                        <!-- History will be dynamically added here -->
+                <div class="chat-sidebar-section">
+                    <div class="chat-sidebar-section-title">Previous 7 Days</div>
+                    <div id="weekHistory" class="space-y-1">
+                        <!-- Week's history items will be added here -->
+                    </div>
+                </div>
+                
+                <div class="chat-sidebar-section">
+                    <div class="chat-sidebar-section-title">AI Providers</div>
+                    <div id="providersList" class="space-y-1">
+                        <!-- Providers will be added here -->
                     </div>
                 </div>
             </div>
             
-            <div class="p-4 border-t border-gray-800">
-                <div class="flex items-center justify-between mb-4">
-                    <span class="text-sm text-gray-400">System Status</span>
-                    <span id="apiStatusIndicator" class="provider-indicator connected"></span>
+            <div class="chat-sidebar-footer">
+                <div id="chatUserMenu" class="chat-user-menu">
+                    <img id="chatUserAvatar" class="chat-user-avatar" src="https://picsum.photos/seed/user/32/32.jpg" alt="User">
+                    <div class="chat-user-info">
+                        <div id="chatUserName" class="chat-user-name">Guest User</div>
+                        <div id="chatUserEmail" class="chat-user-email">guest@example.com</div>
+                    </div>
+                    <i data-lucide="chevron-up" class="w-4 h-4 text-gray-400"></i>
                 </div>
-                <button id="settingsBtn" class="w-full py-3 bg-gray-800 hover:bg-gray-700 rounded-xl flex items-center justify-center gap-2 transition-all font-semibold">
-                    <i data-lucide="settings" class="w-5 h-5"></i>
-                    Settings
-                </button>
             </div>
         </div>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col main-content">
-            <!-- Mobile Header -->
-            <div class="mobile-header glass-effect p-4 border-b border-gray-800 flex items-center justify-between">
-                <button id="mobileMenuBtn" class="p-3 rounded-xl hover:bg-gray-800 transition-all">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
-                <h2 class="text-lg font-bold">AJ PERSONAL AGENT</h2>
-                <div class="flex gap-2">
-                    <button id="mobileThemeToggle" class="p-3 rounded-xl hover:bg-gray-800 transition-all">
-                        <i data-lucide="moon" class="w-6 h-6"></i>
+        <div class="chat-main">
+            <!-- Header -->
+            <div class="chat-header">
+                <div class="chat-title" id="chatTitle">New Chat</div>
+                <div class="chat-actions">
+                    <button id="chatTemplatesBtn" class="chat-action-btn" title="Templates">
+                        <i data-lucide="layout-template" class="w-5 h-5"></i>
+                    </button>
+                    <button id="chatSettingsBtn" class="chat-action-btn" title="Settings">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                    </button>
+                    <button id="chatMobileMenuBtn" class="chat-action-btn md:hidden" title="Menu">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
             
-            <!-- Desktop Header -->
-            <div class="desktop-header glass-effect p-6 border-b border-gray-800">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 id="projectTitle" class="text-2xl font-bold mb-1">AI Website Studio</h2>
-                        <div class="flex items-center gap-3">
-                            <span id="currentProvider" class="text-sm text-gray-400">Claude</span>
-                            <span id="providerStatus" class="text-xs px-3 py-1 bg-green-900/30 text-green-400 rounded-full">Connected</span>
-                            <div class="flex items-center gap-2">
-                                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                <span class="text-xs text-gray-400">Real-time</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex gap-3">
-                        <button id="templatesBtn" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl flex items-center gap-2 transition-all font-semibold">
-                            <i data-lucide="layout-template" class="w-5 h-5"></i>
-                            Templates
-                        </button>
-                        <div class="theme-toggle" id="themeToggle">
-                            <div class="theme-toggle-slider"></div>
-                        </div>
-                        <button id="notificationBtn" class="p-3 rounded-xl hover:bg-gray-800 relative transition-all">
-                            <i data-lucide="bell" class="w-6 h-6"></i>
-                            <span class="notification-badge">3</span>
-                        </button>
-                        <button id="previewBtn" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-xl flex items-center gap-2 transition-all font-semibold disabled:opacity-50" disabled>
-                            <i data-lucide="eye" class="w-5 h-5"></i>
-                            Preview
-                        </button>
-                        <button id="downloadBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl flex items-center gap-2 transition-all font-semibold disabled:opacity-50" disabled>
-                            <i data-lucide="download" class="w-5 h-5"></i>
-                            Download
-                        </button>
-                        <button id="deployBtn" class="px-4 py-2 primary-gradient hover:opacity-90 rounded-xl flex items-center gap-2 transition-all font-semibold shadow-lg">
-                            <i data-lucide="rocket" class="w-5 h-5"></i>
-                            Deploy
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Messages Area -->
-            <div id="messagesContainer" class="flex-1 overflow-y-auto scrollbar-thin p-6">
-                <div id="welcomeScreen" class="max-w-7xl mx-auto">
-                    <!-- Hero Section -->
-                    <div class="text-center mb-20">
-                        <div class="inline-flex items-center gap-4 mb-8">
-                            <div class="w-20 h-20 primary-gradient rounded-2xl flex items-center justify-center shadow-2xl">
-                                <i data-lucide="code" class="w-10 h-10 text-white"></i>
-                            </div>
-                        </div>
-                        <h1 class="text-6xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6 leading-tight">
-                            AI Website Studio
-                        </h1>
-                        <p class="text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed">
-                            Create stunning websites with natural language using advanced AI models. 
-                            <span class="text-indigo-400">Powered by AJ STUDIOZ</span>
-                        </p>
-                    </div>
+            <!-- Messages -->
+            <div id="chatMessages" class="chat-messages">
+                <div id="chatWelcome" class="chat-welcome">
+                    <h1 class="chat-welcome-title">AJ PERSONAL AGENT</h1>
+                    <p class="chat-welcome-subtitle">How can I help you today?</p>
                     
-                    <!-- Stats Section -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
-                        <div class="stats-card">
-                            <div class="stats-icon primary-gradient">
-                                <i data-lucide="users" class="w-6 h-6 text-white"></i>
-                            </div>
-                            <div class="stats-value">10K+</div>
-                            <div class="stats-label">Active Users</div>
+                    <div class="chat-welcome-examples">
+                        <div class="chat-welcome-example" data-prompt="Create a modern portfolio website with a hero section, about me, skills, projects, and contact sections.">
+                            <div class="chat-welcome-example-title">Portfolio Website</div>
+                            <div class="chat-welcome-example-text">Create a modern portfolio website with a hero section, about me, skills, projects, and contact sections.</div>
                         </div>
-                        <div class="stats-card">
-                            <div class="stats-icon secondary-gradient">
-                                <i data-lucide="layout" class="w-6 h-6 text-white"></i>
-                            </div>
-                            <div class="stats-value">50K+</div>
-                            <div class="stats-label">Websites Created</div>
+                        <div class="chat-welcome-example" data-prompt="Build an e-commerce website with product listings, shopping cart, and checkout process.">
+                            <div class="chat-welcome-example-title">E-commerce Store</div>
+                            <div class="chat-welcome-example-text">Build an e-commerce website with product listings, shopping cart, and checkout process.</div>
                         </div>
-                        <div class="stats-card">
-                            <div class="stats-icon success-gradient">
-                                <i data-lucide="zap" class="w-6 h-6 text-white"></i>
-                            </div>
-                            <div class="stats-value">2M+</div>
-                            <div class="stats-label">API Calls</div>
+                        <div class="chat-welcome-example" data-prompt="Design a landing page for a SaaS product with features, pricing, and testimonials.">
+                            <div class="chat-welcome-example-title">SaaS Landing Page</div>
+                            <div class="chat-welcome-example-text">Design a landing page for a SaaS product with features, pricing, and testimonials.</div>
                         </div>
-                        <div class="stats-card">
-                            <div class="stats-icon warning-gradient">
-                                <i data-lucide="star" class="w-6 h-6 text-white"></i>
-                            </div>
-                            <div class="stats-value">4.9/5</div>
-                            <div class="stats-label">User Rating</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Capabilities Section -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-                        <!-- Capability cards will be dynamically added here -->
-                    </div>
-                    
-                    <!-- Suggestion Chips -->
-                    <div class="mt-16">
-                        <h3 class="text-2xl font-bold mb-6 text-center">Try these suggestions</h3>
-                        <div class="flex flex-wrap justify-center gap-4">
-                            <button class="suggestion-chip px-6 py-3 glass-effect-light rounded-full text-sm font-semibold hover:bg-indigo-500/20 transition-all">
-                                Create a portfolio website
-                            </button>
-                            <button class="suggestion-chip px-6 py-3 glass-effect-light rounded-full text-sm font-semibold hover:bg-indigo-500/20 transition-all">
-                                Build an e-commerce store
-                            </button>
-                            <button class="suggestion-chip px-6 py-3 glass-effect-light rounded-full text-sm font-semibold hover:bg-indigo-500/20 transition-all">
-                                Design a landing page
-                            </button>
-                            <button class="suggestion-chip px-6 py-3 glass-effect-light rounded-full text-sm font-semibold hover:bg-indigo-500/20 transition-all">
-                                Create a blog template
-                            </button>
-                            <button class="suggestion-chip px-6 py-3 glass-effect-light rounded-full text-sm font-semibold hover:bg-indigo-500/20 transition-all">
-                                Build a dashboard UI
-                            </button>
+                        <div class="chat-welcome-example" data-prompt="Create a tech blog with article listings, categories, and search functionality.">
+                            <div class="chat-welcome-example-title">Tech Blog</div>
+                            <div class="chat-welcome-example-text">Create a tech blog with article listings, categories, and search functionality.</div>
                         </div>
                     </div>
                 </div>
                 
-                <div id="messagesList" class="max-w-5xl mx-auto hidden">
-                    <!-- Messages will be dynamically added here -->
+                <div id="chatConversation" class="hidden">
+                    <!-- Messages will be added here -->
                 </div>
             </div>
             
-            <!-- Input Area -->
-            <div class="glass-effect p-6 border-t border-gray-800">
-                <div class="max-w-5xl mx-auto">
-                    <!-- Voice Recording (hidden by default) -->
-                    <div id="voiceRecording" class="voice-recording hidden">
-                        <p class="text-sm mb-2 font-semibold">Listening...</p>
-                        <div class="voice-visualizer">
-                            <div class="voice-bar"></div>
-                            <div class="voice-bar"></div>
-                            <div class="voice-bar"></div>
-                            <div class="voice-bar"></div>
-                            <div class="voice-bar"></div>
-                        </div>
-                        <button id="stopVoiceBtn" class="mt-4 px-6 py-2 bg-red-600 hover:bg-red-700 rounded-xl flex items-center gap-2 transition-all font-semibold">
-                            <i data-lucide="square" class="w-4 h-4"></i>
-                            Stop Recording
+            <!-- Input -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <textarea 
+                        id="chatInput" 
+                        class="chat-input" 
+                        placeholder="Message AJ PERSONAL AGENT..."
+                        rows="1"
+                    ></textarea>
+                    <div class="chat-input-actions">
+                        <button id="chatAttachImageBtn" class="chat-input-action" title="Attach Image">
+                            <i data-lucide="paperclip" class="w-4 h-4"></i>
+                        </button>
+                        <button id="chatVoiceInputBtn" class="chat-input-action" title="Voice Input">
+                            <i data-lucide="mic" class="w-4 h-4"></i>
                         </button>
                     </div>
-                    
-                    <!-- Image Preview (hidden by default) -->
-                    <div id="imagePreview" class="image-preview-container hidden">
-                        <!-- Image previews will be added here -->
-                    </div>
-                    
-                    <div class="flex items-end gap-4">
-                        <div class="flex gap-2">
-                            <button id="attachImageBtn" class="p-3 text-gray-400 hover:text-white hover:bg-gray-800 rounded-xl transition-all tooltip">
-                                <i data-lucide="image" class="w-6 h-6"></i>
-                                <span class="tooltip-text">Attach Image</span>
-                            </button>
-                            <button id="voiceInputBtn" class="p-3 text-gray-400 hover:text-white hover:bg-gray-800 rounded-xl transition-all tooltip">
-                                <i data-lucide="mic" class="w-6 h-6"></i>
-                                <span class="tooltip-text">Voice Input</span>
-                            </button>
-                            <button id="historyBtn" class="p-3 text-gray-400 hover:text-white hover:bg-gray-800 rounded-xl transition-all tooltip">
-                                <i data-lucide="history" class="w-6 h-6"></i>
-                                <span class="tooltip-text">History</span>
-                            </button>
-                        </div>
-                        
-                        <textarea 
-                            id="messageInput" 
-                            class="flex-1 input-field resize-none min-h-[64px] max-h-[200px]" 
-                            placeholder="Describe the website you want to create..."
-                            rows="1"
-                        ></textarea>
-                        
-                        <button id="sendBtn" class="p-4 primary-gradient hover:opacity-90 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg">
-                            <i data-lucide="send" class="w-6 h-6"></i>
-                        </button>
-                    </div>
+                    <button id="chatSendBtn" class="chat-send-btn">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1682,25 +1920,6 @@
         </div>
     </div>
     
-    <!-- Preview Modal -->
-    <div id="previewModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="bg-white rounded-2xl w-[95vw] h-[95vh] flex flex-col shadow-2xl">
-            <div class="flex items-center justify-between p-6 border-b">
-                <h3 class="text-xl font-semibold text-gray-900">Website Preview</h3>
-                <div class="flex gap-3">
-                    <button id="downloadFromPreviewBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-all font-semibold">
-                        <i data-lucide="download" class="w-5 h-5"></i>
-                        Download
-                    </button>
-                    <button id="closePreviewBtn" class="p-2 text-gray-500 hover:text-gray-700">
-                        <i data-lucide="x" class="w-6 h-6"></i>
-                    </button>
-                </div>
-            </div>
-            <iframe id="previewFrame" class="flex-1 w-full border-none" title="Website Preview"></iframe>
-        </div>
-    </div>
-    
     <!-- Templates Modal -->
     <div id="templatesModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 max-w-7xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -1720,6 +1939,25 @@
         </div>
     </div>
     
+    <!-- Preview Modal -->
+    <div id="previewModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl w-[95vw] h-[95vh] flex flex-col shadow-2xl">
+            <div class="flex items-center justify-between p-6 border-b">
+                <h3 class="text-xl font-semibold text-gray-900">Website Preview</h3>
+                <div class="flex gap-3">
+                    <button id="downloadFromPreviewBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-all font-semibold">
+                        <i data-lucide="download" class="w-5 h-5"></i>
+                        Download
+                    </button>
+                    <button id="closePreviewBtn" class="p-2 text-gray-500 hover:text-gray-700">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+            <iframe id="previewFrame" class="flex-1 w-full border-none" title="Website Preview"></iframe>
+        </div>
+    </div>
+    
     <!-- History Modal -->
     <div id="historyModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -1734,7 +1972,7 @@
             </div>
             
             <div id="historyContent" class="space-y-4">
-                <!-- History items will be dynamically added here -->
+                <!-- History items will be added here -->
             </div>
         </div>
     </div>
@@ -1848,72 +2086,52 @@
         // DOM elements
         const elements = {
             splashScreen: document.getElementById('splashScreen'),
-            messagesContainer: document.getElementById('messagesContainer'),
-            messagesList: document.getElementById('messagesList'),
-            welcomeScreen: document.getElementById('welcomeScreen'),
-            messageInput: document.getElementById('messageInput'),
-            sendBtn: document.getElementById('sendBtn'),
-            projectsList: document.getElementById('projectsList'),
+            chatContainer: document.getElementById('chatContainer'),
+            chatSidebar: document.getElementById('chatSidebar'),
+            chatNewChatBtn: document.getElementById('chatNewChatBtn'),
+            chatMobileMenuBtn: document.getElementById('chatMobileMenuBtn'),
+            chatUserMenu: document.getElementById('chatUserMenu'),
+            chatUserAvatar: document.getElementById('chatUserAvatar'),
+            chatUserName: document.getElementById('chatUserName'),
+            chatUserEmail: document.getElementById('chatUserEmail'),
+            chatTitle: document.getElementById('chatTitle'),
+            chatMessages: document.getElementById('chatMessages'),
+            chatWelcome: document.getElementById('chatWelcome'),
+            chatConversation: document.getElementById('chatConversation'),
+            chatInput: document.getElementById('chatInput'),
+            chatSendBtn: document.getElementById('chatSendBtn'),
+            chatAttachImageBtn: document.getElementById('chatAttachImageBtn'),
+            chatVoiceInputBtn: document.getElementById('chatVoiceInputBtn'),
+            chatTemplatesBtn: document.getElementById('chatTemplatesBtn'),
+            chatSettingsBtn: document.getElementById('chatSettingsBtn'),
+            todayHistory: document.getElementById('todayHistory'),
+            yesterdayHistory: document.getElementById('yesterdayHistory'),
+            weekHistory: document.getElementById('weekHistory'),
             providersList: document.getElementById('providersList'),
-            historyList: document.getElementById('historyList'),
-            projectTitle: document.getElementById('projectTitle'),
-            currentProvider: document.getElementById('currentProvider'),
-            providerStatus: document.getElementById('providerStatus'),
-            apiStatusIndicator: document.getElementById('apiStatusIndicator'),
             settingsModal: document.getElementById('settingsModal'),
-            settingsBtn: document.getElementById('settingsBtn'),
             closeSettingsBtn: document.getElementById('closeSettingsBtn'),
             saveSettingsBtn: document.getElementById('saveSettingsBtn'),
             cancelSettingsBtn: document.getElementById('cancelSettingsBtn'),
-            previewBtn: document.getElementById('previewBtn'),
-            downloadBtn: document.getElementById('downloadBtn'),
-            deployBtn: document.getElementById('deployBtn'),
+            templatesModal: document.getElementById('templatesModal'),
+            closeTemplatesBtn: document.getElementById('closeTemplatesBtn'),
             previewModal: document.getElementById('previewModal'),
             previewFrame: document.getElementById('previewFrame'),
             closePreviewBtn: document.getElementById('closePreviewBtn'),
             downloadFromPreviewBtn: document.getElementById('downloadFromPreviewBtn'),
-            newProjectBtn: document.getElementById('newProjectBtn'),
-            backendUrlInput: document.getElementById('backendUrl'),
-            authSection: document.getElementById('authSection'),
-            notLoggedIn: document.getElementById('notLoggedIn'),
-            loggedIn: document.getElementById('loggedIn'),
-            googleSignInBtn: document.getElementById('googleSignInBtn'),
-            signOutBtn: document.getElementById('signOutBtn'),
-            userAvatar: document.getElementById('userAvatar'),
-            userName: document.getElementById('userName'),
-            userEmail: document.getElementById('userEmail'),
-            userProjects: document.getElementById('userProjects'),
-            userMessages: document.getElementById('userMessages'),
-            userApiCalls: document.getElementById('userApiCalls'),
-            mobileMenuBtn: document.getElementById('mobileMenuBtn'),
-            sidebar: document.getElementById('sidebar'),
-            mobileOverlay: document.getElementById('mobileOverlay'),
-            themeToggle: document.getElementById('themeToggle'),
-            mobileThemeToggle: document.getElementById('mobileThemeToggle'),
-            settingsThemeToggle: document.getElementById('settingsThemeToggle'),
-            notificationBtn: document.getElementById('notificationBtn'),
+            historyModal: document.getElementById('historyModal'),
+            closeHistoryBtn: document.getElementById('closeHistoryBtn'),
+            historyContent: document.getElementById('historyContent'),
             notificationPanel: document.getElementById('notificationPanel'),
             closeNotificationPanel: document.getElementById('closeNotificationPanel'),
             syncDataBtn: document.getElementById('syncDataBtn'),
             exportDataBtn: document.getElementById('exportDataBtn'),
             clearDataBtn: document.getElementById('clearDataBtn'),
-            templatesBtn: document.getElementById('templatesBtn'),
-            templatesModal: document.getElementById('templatesModal'),
-            closeTemplatesBtn: document.getElementById('closeTemplatesBtn'),
-            historyBtn: document.getElementById('historyBtn'),
-            historyModal: document.getElementById('historyModal'),
-            closeHistoryBtn: document.getElementById('closeHistoryBtn'),
-            historyContent: document.getElementById('historyContent'),
-            voiceInputBtn: document.getElementById('voiceInputBtn'),
-            voiceRecording: document.getElementById('voiceRecording'),
-            stopVoiceBtn: document.getElementById('stopVoiceBtn'),
-            attachImageBtn: document.getElementById('attachImageBtn'),
             imageInput: document.getElementById('imageInput'),
-            imagePreview: document.getElementById('imagePreview'),
             creativitySlider: document.getElementById('creativitySlider'),
             lengthSlider: document.getElementById('lengthSlider'),
             focusSlider: document.getElementById('focusSlider'),
-            fabBtn: document.getElementById('fabBtn')
+            fabBtn: document.getElementById('fabBtn'),
+            mobileOverlay: document.getElementById('mobileOverlay')
         };
         
         // Templates data
@@ -1970,49 +2188,47 @@
         
         // Initialize the app
         function init() {
-            // Show splash screen
+            // Show splash screen for 2.5 seconds then show main content
             setTimeout(() => {
-                elements.splashScreen.classList.add('hidden');
+                elements.splashScreen.style.display = 'none';
+                elements.chatContainer.style.display = 'flex';
+                
+                // Load saved settings
+                loadSettings();
+                
+                // Check authentication status
+                checkAuthStatus();
+                
+                // Initialize Google Sign-In
+                initializeGoogleSignIn();
+                
+                // Render providers
+                renderProviders();
+                
+                // Render templates
+                renderTemplates();
+                
+                // Set up event listeners
+                setupEventListeners();
+                
+                // Apply theme
+                applyTheme();
+                
+                // Load history
+                loadHistory();
+                
+                // Load user stats
+                loadUserStats();
+                
+                // Initialize real-time updates
+                initializeRealTimeUpdates();
+                
+                // Set default provider
+                selectProvider('claude');
+                
+                // Re-initialize Lucide icons after DOM changes
+                lucide.createIcons();
             }, 2500);
-            
-            // Load saved settings
-            loadSettings();
-            
-            // Check authentication status
-            checkAuthStatus();
-            
-            // Initialize Google Sign-In
-            initializeGoogleSignIn();
-            
-            // Render capabilities
-            renderCapabilities();
-            
-            // Render providers
-            renderProviders();
-            
-            // Render templates
-            renderTemplates();
-            
-            // Set up event listeners
-            setupEventListeners();
-            
-            // Check API status
-            updateApiStatus();
-            
-            // Apply theme
-            applyTheme();
-            
-            // Load history
-            loadHistory();
-            
-            // Load user stats
-            loadUserStats();
-            
-            // Initialize real-time updates
-            initializeRealTimeUpdates();
-            
-            // Set default provider
-            selectProvider('claude');
         }
         
         // Load settings from localStorage
@@ -2023,7 +2239,6 @@
                 state.backendUrl = settings.backendUrl || state.backendUrl;
                 state.darkMode = settings.darkMode !== undefined ? settings.darkMode : true;
                 state.aiSettings = { ...state.aiSettings, ...settings.aiSettings };
-                elements.backendUrlInput.value = state.backendUrl;
                 
                 // Update AI settings
                 elements.creativitySlider.value = state.aiSettings.creativity;
@@ -2083,8 +2298,6 @@
                     const data = await response.json();
                     state.projects = data.projects || [];
                     state.userStats = data.stats || state.userStats;
-                    updateUserStats();
-                    renderProjects();
                 }
             } catch (error) {
                 console.error('Error loading user data:', error);
@@ -2093,17 +2306,22 @@
         
         // Initialize Google Sign-In
         function initializeGoogleSignIn() {
-            window.onload = function() {
+            if (typeof google !== 'undefined' && google.accounts) {
                 google.accounts.id.initialize({
                     client_id: "1068968480074-dgsmpq104mmqsqr1ckhcfcn54gpnrk5l.apps.googleusercontent.com",
                     callback: handleGoogleSignIn
                 });
                 
-                google.accounts.id.renderButton(
-                    elements.googleSignInBtn,
-                    { theme: "outline", size: "large", width: "100%" }
-                );
-            };
+                // Create Google Sign-In button if it exists
+                const googleSignInBtn = document.getElementById('googleSignInBtn');
+                if (googleSignInBtn) {
+                    google.accounts.id.renderButton(googleSignInBtn, { 
+                        theme: "outline", 
+                        size: "large", 
+                        width: "100%" 
+                    });
+                }
+            }
         }
         
         // Handle Google Sign-In response
@@ -2171,23 +2389,14 @@
         // Update authentication UI
         function updateAuthUI() {
             if (state.user) {
-                elements.notLoggedIn.classList.add('hidden');
-                elements.loggedIn.classList.remove('hidden');
-                
-                elements.userAvatar.src = state.user.picture;
-                elements.userName.textContent = state.user.name;
-                elements.userEmail.textContent = state.user.email;
+                elements.chatUserAvatar.src = state.user.picture;
+                elements.chatUserName.textContent = state.user.name;
+                elements.chatUserEmail.textContent = state.user.email;
             } else {
-                elements.notLoggedIn.classList.remove('hidden');
-                elements.loggedIn.classList.add('hidden');
+                elements.chatUserAvatar.src = "https://picsum.photos/seed/user/32/32.jpg";
+                elements.chatUserName.textContent = "Guest User";
+                elements.chatUserEmail.textContent = "guest@example.com";
             }
-        }
-        
-        // Update user stats
-        function updateUserStats() {
-            elements.userProjects.textContent = state.userStats.projects;
-            elements.userMessages.textContent = state.userStats.messages;
-            elements.userApiCalls.textContent = state.userStats.apiCalls;
         }
         
         // Load user stats
@@ -2196,7 +2405,6 @@
             if (savedStats) {
                 try {
                     state.userStats = JSON.parse(savedStats);
-                    updateUserStats();
                 } catch (e) {
                     console.error('Error parsing user stats:', e);
                 }
@@ -2206,84 +2414,6 @@
         // Save user stats
         function saveUserStats() {
             localStorage.setItem('ajPersonalAgentStats', JSON.stringify(state.userStats));
-            updateUserStats();
-        }
-        
-        // Render capability cards
-        function renderCapabilities() {
-            const container = document.querySelector('#welcomeScreen .grid');
-            const capabilities = [
-                {
-                    icon: 'rocket',
-                    title: "SaaS Landing Pages",
-                    description: "High-converting landing pages with modern design",
-                    prompt: "Create a cutting-edge SaaS landing page with animated hero section, feature showcase, pricing tiers with hover effects, customer testimonials, and compelling call-to-action buttons. Include smooth scrolling navigation and mobile-responsive design.",
-                    color: "from-blue-500 to-cyan-500"
-                },
-                {
-                    icon: 'shopping-cart',
-                    title: "E-commerce Stores",
-                    description: "Complete online stores with advanced functionality",
-                    prompt: "Build a modern e-commerce website with product grid, detailed product pages, shopping cart with animations, user reviews, search and filter functionality, and checkout process. Include responsive design and product image galleries.",
-                    color: "from-green-500 to-emerald-500"
-                },
-                {
-                    icon: 'palette',
-                    title: "Creative Portfolios",
-                    description: "Stunning portfolios with interactive galleries",
-                    prompt: "Design a creative portfolio website with masonry image gallery, project case studies, smooth animations, about section with timeline, skills showcase, and contact form. Include dark/light mode toggle and artistic transitions.",
-                    color: "from-purple-500 to-pink-500"
-                },
-                {
-                    icon: 'building',
-                    title: "Corporate Websites",
-                    description: "Professional business sites with CMS features",
-                    prompt: "Create a professional corporate website with executive team profiles, services showcase, company history timeline, blog section with categories, career pages, and multi-level navigation. Include SEO optimization and contact forms.",
-                    color: "from-gray-600 to-gray-800"
-                },
-                {
-                    icon: 'bar-chart-3',
-                    title: "Analytics Dashboards",
-                    description: "Interactive dashboards with real-time data",
-                    prompt: "Build an advanced analytics dashboard with interactive charts, data visualization, real-time metrics, customizable widgets, data tables with sorting and filtering, and responsive sidebar navigation. Include dark theme.",
-                    color: "from-orange-500 to-red-500"
-                },
-                {
-                    icon: 'sparkles',
-                    title: "Interactive Apps",
-                    description: "Dynamic web applications with advanced features",
-                    prompt: "Generate an interactive web application with user authentication UI, dynamic content management, advanced animations, form handling with validation, modal dialogs, and responsive components. Include loading states and error handling.",
-                    color: "from-indigo-500 to-purple-500"
-                }
-            ];
-            
-            container.innerHTML = capabilities.map(capability => `
-                <div class="capability-card glass-effect-light p-8 rounded-2xl cursor-pointer" data-prompt="${capability.prompt}">
-                    <div class="flex items-center gap-6 mb-6">
-                        <div class="w-16 h-16 bg-gradient-to-br ${capability.color} rounded-2xl flex items-center justify-center shadow-lg">
-                            <i data-lucide="${capability.icon}" class="w-8 h-8 text-white"></i>
-                        </div>
-                        <h3 class="text-2xl font-semibold">${capability.title}</h3>
-                    </div>
-                    <p class="text-gray-400 mb-6 text-lg leading-relaxed">${capability.description}</p>
-                    <button class="text-indigo-400 hover:text-indigo-300 flex items-center gap-2 font-semibold transition-all">
-                        Use this template <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                    </button>
-                </div>
-            `).join('');
-            
-            // Re-initialize Lucide icons
-            lucide.createIcons();
-            
-            // Add click event to capability cards
-            container.querySelectorAll('.capability-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const prompt = card.dataset.prompt;
-                    elements.messageInput.value = prompt;
-                    elements.messageInput.focus();
-                    showMessageScreen();
-                });
-            });
         }
         
         // Render providers list
@@ -2296,10 +2426,10 @@
             ];
             
             elements.providersList.innerHTML = providers.map(provider => `
-                <div class="provider-item sidebar-item p-4 rounded-xl cursor-pointer flex items-center gap-3 ${state.selectedProvider === provider.id ? 'active' : ''}" data-provider="${provider.id}">
-                    <i data-lucide="${provider.icon}" class="w-5 h-5"></i>
-                    <span class="font-semibold">${provider.name}</span>
-                    <span class="provider-indicator ${state.apiStatus[provider.id] ? 'connected' : 'disconnected'} ml-auto"></span>
+                <div class="chat-history-item ${state.selectedProvider === provider.id ? 'active' : ''}" data-provider="${provider.id}">
+                    <i data-lucide="${provider.icon}" class="chat-history-item-icon"></i>
+                    <div class="chat-history-item-text">${provider.name}</div>
+                    <span class="provider-indicator ${state.apiStatus[provider.id] ? 'connected' : 'disconnected'}"></span>
                 </div>
             `).join('');
             
@@ -2307,7 +2437,7 @@
             lucide.createIcons();
             
             // Add click event to provider items
-            elements.providersList.querySelectorAll('.provider-item').forEach(item => {
+            elements.providersList.querySelectorAll('.chat-history-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const provider = item.dataset.provider;
                     selectProvider(provider);
@@ -2335,11 +2465,11 @@
             templateGrid.querySelectorAll('.template-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const prompt = card.dataset.prompt;
-                    elements.messageInput.value = prompt;
-                    elements.messageInput.focus();
+                    elements.chatInput.value = prompt;
+                    elements.chatInput.focus();
                     elements.templatesModal.classList.add('hidden');
                     elements.templatesModal.classList.remove('flex');
-                    showMessageScreen();
+                    startNewChat();
                 });
             });
         }
@@ -2349,78 +2479,32 @@
             state.selectedProvider = provider;
             
             // Update UI
-            elements.providersList.querySelectorAll('.provider-item').forEach(item => {
+            elements.providersList.querySelectorAll('.chat-history-item').forEach(item => {
                 item.classList.remove('active');
             });
             elements.providersList.querySelector(`[data-provider="${provider}"]`).classList.add('active');
-            
-            // Update header
-            const providerNames = {
-                claude: 'Claude',
-                gemini: 'Gemini',
-                groq: 'Groq',
-                zai: 'Z.ai'
-            };
-            
-            elements.currentProvider.textContent = providerNames[provider];
-            elements.providerStatus.textContent = state.apiStatus[provider] ? 'Connected' : 'Not connected';
-            elements.providerStatus.className = state.apiStatus[provider] 
-                ? 'text-xs px-3 py-1 bg-green-900/30 text-green-400 rounded-full' 
-                : 'text-xs px-3 py-1 bg-gray-800 rounded-full';
-            
-            // Enable input if connected
-            if (state.apiStatus[provider]) {
-                elements.messageInput.disabled = false;
-                elements.sendBtn.disabled = false;
-            } else {
-                elements.messageInput.disabled = true;
-                elements.sendBtn.disabled = true;
-            }
         }
         
-        // Update API status
-        function updateApiStatus() {
-            let anyConnected = false;
+        // Start a new chat
+        function startNewChat() {
+            state.currentProject = null;
+            state.messages = [];
+            state.generatedWebsite = null;
             
-            Object.keys(state.apiStatus).forEach(provider => {
-                if (state.apiStatus[provider]) {
-                    anyConnected = true;
-                }
-                
-                // Update provider indicators
-                const providerItem = elements.providersList.querySelector(`[data-provider="${provider}"]`);
-                if (providerItem) {
-                    const indicator = providerItem.querySelector('.provider-indicator');
-                    indicator.className = `provider-indicator ${state.apiStatus[provider] ? 'connected' : 'disconnected'}`;
-                }
-            });
+            // Update UI
+            elements.chatTitle.textContent = 'New Chat';
+            elements.chatWelcome.classList.remove('hidden');
+            elements.chatConversation.classList.add('hidden');
             
-            // Update main status indicator
-            elements.apiStatusIndicator.className = `provider-indicator ${anyConnected ? 'connected' : 'disconnected'}`;
-        }
-        
-        // Show message screen
-        function showMessageScreen() {
-            elements.welcomeScreen.classList.add('hidden');
-            elements.messagesList.classList.remove('hidden');
-            
-            // If no project is active, create one
-            if (!state.currentProject) {
-                createNewProject();
-            }
-        }
-        
-        // Show welcome screen
-        function showWelcomeScreen() {
-            elements.welcomeScreen.classList.remove('hidden');
-            elements.messagesList.classList.add('hidden');
+            // Create a new project
+            createNewProject();
         }
         
         // Create a new project
         function createNewProject() {
             const project = {
                 id: Date.now(),
-                title: 'New Project',
+                title: 'New Chat',
                 messages: [],
                 provider: state.selectedProvider,
                 createdAt: new Date(),
@@ -2435,14 +2519,19 @@
             state.userStats.projects++;
             saveUserStats();
             
-            // Update UI
-            updateProjectTitle();
-            renderProjects();
-            
             // Save to backend if user is logged in
             if (state.user) {
                 saveProjectToBackend(project);
             }
+            
+            // Update history
+            addToHistory({
+                id: project.id,
+                title: project.title,
+                content: '',
+                timestamp: project.createdAt,
+                projectId: project.id
+            });
         }
         
         // Save project to backend
@@ -2467,75 +2556,34 @@
             }
         }
         
-        // Update project title
-        function updateProjectTitle() {
-            if (state.currentProject) {
-                elements.projectTitle.textContent = state.currentProject.title;
-            } else {
-                elements.projectTitle.textContent = 'AI Website Studio';
-            }
-        }
-        
-        // Render projects list
-        function renderProjects() {
-            elements.projectsList.innerHTML = state.projects.slice(0, 8).map(project => `
-                <div class="project-item sidebar-item p-4 rounded-xl cursor-pointer flex items-center gap-3 ${state.currentProject?.id === project.id ? 'active' : ''}" data-id="${project.id}">
-                    <div class="w-3 h-3 rounded-full bg-indigo-500"></div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold truncate">${project.title}</p>
-                        <p class="text-xs text-gray-500">${project.messages.length} messages</p>
-                    </div>
-                </div>
-            `).join('');
+        // Show conversation
+        function showConversation() {
+            elements.chatWelcome.classList.add('hidden');
+            elements.chatConversation.classList.remove('hidden');
             
-            // Add click event to project items
-            elements.projectsList.querySelectorAll('.project-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const projectId = parseInt(item.dataset.id);
-                    const project = state.projects.find(p => p.id === projectId);
-                    if (project) {
-                        state.currentProject = project;
-                        state.messages = [...project.messages];
-                        updateProjectTitle();
-                        renderMessages();
-                        showMessageScreen();
-                        renderProjects();
-                    }
-                });
-            });
+            // Render messages
+            renderMessages();
         }
         
         // Render messages
         function renderMessages() {
-            elements.messagesList.innerHTML = state.messages.map(message => `
-                <div class="flex gap-6 mb-8 ${message.type === 'user' ? 'justify-end' : ''}">
-                    ${message.type === 'assistant' ? `
-                        <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: ${getProviderColor(message.provider)}">
-                            ${getProviderIcon(message.provider)}
-                        </div>
-                    ` : ''}
-                    
-                    <div class="max-w-[85%]">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="text-sm font-semibold">${message.type === 'user' ? 'You' : getProviderName(message.provider)}</span>
-                            <span class="text-xs text-gray-500">${formatTime(message.timestamp)}</span>
-                        </div>
-                        
-                        <div class="message-bubble ${message.type === 'user' ? 'user-message' : 'ai-message'}">
-                            <div class="whitespace-pre-wrap">${escapeHtml(message.content)}</div>
-                        </div>
+            elements.chatConversation.innerHTML = state.messages.map(message => `
+                <div class="chat-message" data-message-id="${message.id}">
+                    <div class="chat-message-avatar ${message.type === 'user' ? 'chat-message-user' : 'chat-message-assistant'}">
+                        ${message.type === 'user' ? 'U' : getProviderIcon(message.provider)}
                     </div>
-                    
-                    ${message.type === 'user' ? `
-                        <div class="w-12 h-12 rounded-full primary-gradient flex items-center justify-center flex-shrink-0">
-                            👤
+                    <div class="chat-message-content">
+                        <div class="chat-message-header">
+                            <div class="chat-message-name">${message.type === 'user' ? 'You' : getProviderName(message.provider)}</div>
+                            <div class="chat-message-time">${formatTime(message.timestamp)}</div>
                         </div>
-                    ` : ''}
+                        <div class="chat-message-text">${escapeHtml(message.content)}</div>
+                    </div>
                 </div>
             `).join('');
             
             // Scroll to bottom
-            elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
+            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
         }
         
         // Add a message to the conversation
@@ -2554,7 +2602,12 @@
             if (state.currentProject) {
                 state.currentProject.messages.push(message);
                 state.currentProject.updatedAt = new Date();
-                renderProjects();
+                
+                // Update project title if it's the first message
+                if (state.currentProject.title === 'New Chat' && type === 'user') {
+                    state.currentProject.title = content.slice(0, 30) + (content.length > 30 ? '...' : '');
+                    elements.chatTitle.textContent = state.currentProject.title;
+                }
             }
             
             // Update stats
@@ -2564,7 +2617,15 @@
             }
             
             // Add to history
-            addToHistory(message);
+            if (type === 'user') {
+                addToHistory({
+                    id: message.id,
+                    title: content.slice(0, 50) + (content.length > 50 ? '...' : ''),
+                    content: content,
+                    timestamp: message.timestamp,
+                    projectId: state.currentProject ? state.currentProject.id : null
+                });
+            }
             
             renderMessages();
             return message;
@@ -2572,12 +2633,17 @@
         
         // Send a message to the AI
         async function sendMessage() {
-            const content = elements.messageInput.value.trim();
+            const content = elements.chatInput.value.trim();
             if (!content || state.isGenerating || !state.selectedProvider) return;
             
             // Clear input
-            elements.messageInput.value = '';
-            elements.messageInput.style.height = 'auto';
+            elements.chatInput.value = '';
+            elements.chatInput.style.height = 'auto';
+            
+            // Show conversation if not already visible
+            if (elements.chatWelcome.classList.contains('hidden') === false) {
+                showConversation();
+            }
             
             // Add user message
             addMessage('user', content);
@@ -2587,7 +2653,7 @@
             
             // Set generating state
             state.isGenerating = true;
-            elements.sendBtn.disabled = true;
+            elements.chatSendBtn.disabled = true;
             
             try {
                 // Prepare conversation history
@@ -2681,15 +2747,9 @@ Always provide complete, production-ready code that works immediately when opene
                 // Check if response contains HTML
                 if (data.content.includes('<html') || data.content.includes('<!DOCTYPE html')) {
                     state.generatedWebsite = data.content;
-                    elements.previewBtn.disabled = false;
-                    elements.downloadBtn.disabled = false;
-                }
-                
-                // Update project title if it's the first message
-                if (state.currentProject && state.currentProject.title === 'New Project') {
-                    state.currentProject.title = content.slice(0, 30) + (content.length > 30 ? '...' : '');
-                    updateProjectTitle();
-                    renderProjects();
+                    
+                    // Add preview and download buttons
+                    addMessageActions(aiMessage.id);
                 }
                 
                 // Auto-save project if enabled
@@ -2708,32 +2768,61 @@ Always provide complete, production-ready code that works immediately when opene
             } finally {
                 // Reset generating state
                 state.isGenerating = false;
-                elements.sendBtn.disabled = false;
+                elements.chatSendBtn.disabled = false;
                 
                 // Clear uploaded images
                 clearUploadedImages();
             }
         }
         
+        // Add action buttons to a message
+        function addMessageActions(messageId) {
+            const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+            if (!messageElement) return;
+            
+            const actionsContainer = document.createElement('div');
+            actionsContainer.className = 'flex gap-2 mt-4';
+            actionsContainer.innerHTML = `
+                <button class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-2 transition-all font-semibold text-sm" onclick="previewWebsite()">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                    Preview
+                </button>
+                <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-all font-semibold text-sm" onclick="downloadWebsite()">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    Download
+                </button>
+            `;
+            
+            messageElement.appendChild(actionsContainer);
+            lucide.createIcons();
+        }
+        
         // Show typing indicator
         function showTypingIndicator() {
             const typingDiv = document.createElement('div');
             typingDiv.id = 'typingIndicator';
-            typingDiv.className = 'flex gap-6 mb-8';
+            typingDiv.className = 'chat-message';
             typingDiv.innerHTML = `
-                <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: ${getProviderColor(state.selectedProvider)}">
+                <div class="chat-message-avatar chat-message-assistant">
                     ${getProviderIcon(state.selectedProvider)}
                 </div>
-                <div class="message-bubble ai-message">
-                    <div class="typing-indicator">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                <div class="chat-message-content">
+                    <div class="chat-message-header">
+                        <div class="chat-message-name">${getProviderName(state.selectedProvider)}</div>
+                        <div class="chat-message-time">${formatTime(new Date())}</div>
+                    </div>
+                    <div class="chat-message-text">
+                        <div class="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
                     </div>
                 </div>
             `;
-            elements.messagesList.appendChild(typingDiv);
-            elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
+            
+            elements.chatConversation.appendChild(typingDiv);
+            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
         }
         
         // Remove typing indicator
@@ -2841,14 +2930,10 @@ Always provide complete, production-ready code that works immediately when opene
             }
             
             // Update theme toggles
-            elements.themeToggle.classList.toggle('active', state.darkMode);
-            elements.mobileThemeToggle.classList.toggle('active', state.darkMode);
-            elements.settingsThemeToggle.classList.toggle('active', state.darkMode);
-            
-            // Update theme icon
-            const themeIcon = state.darkMode ? 'moon' : 'sun';
-            elements.mobileThemeToggle.querySelector('i').setAttribute('data-lucide', themeIcon);
-            lucide.createIcons();
+            const themeToggles = document.querySelectorAll('.theme-toggle');
+            themeToggles.forEach(toggle => {
+                toggle.classList.toggle('active', state.darkMode);
+            });
         }
         
         // Export data
@@ -2887,9 +2972,8 @@ Always provide complete, production-ready code that works immediately when opene
                 state.history = [];
                 state.userStats = { projects: 0, messages: 0, apiCalls: 0 };
                 saveUserStats();
-                renderProjects();
                 renderHistory();
-                showWelcomeScreen();
+                startNewChat();
                 showNotification('All data cleared successfully!', 'success');
             }
         }
@@ -2914,72 +2998,95 @@ Always provide complete, production-ready code that works immediately when opene
         }
         
         // Add to history
-        function addToHistory(message) {
-            // Only add user messages to history
-            if (message.type === 'user') {
-                const historyItem = {
-                    id: Date.now(),
-                    title: message.content.slice(0, 50) + (message.content.length > 50 ? '...' : ''),
-                    content: message.content,
-                    timestamp: message.timestamp,
-                    projectId: state.currentProject ? state.currentProject.id : null
-                };
-                
-                state.history.unshift(historyItem);
-                
-                // Keep only the last 50 history items
-                if (state.history.length > 50) {
-                    state.history = state.history.slice(0, 50);
-                }
-                
-                saveHistory();
-                renderHistory();
+        function addToHistory(item) {
+            state.history.unshift(item);
+            
+            // Keep only the last 50 history items
+            if (state.history.length > 50) {
+                state.history = state.history.slice(0, 50);
             }
+            
+            saveHistory();
+            renderHistory();
         }
         
         // Render history
         function renderHistory() {
-            // Render in sidebar
-            elements.historyList.innerHTML = state.history.slice(0, 5).map(item => `
-                <div class="history-item sidebar-item p-3 rounded-xl cursor-pointer" data-id="${item.id}">
-                    <div class="history-title font-semibold">${item.title}</div>
-                    <div class="history-date">${formatDate(item.timestamp)}</div>
-                </div>
-            `).join('');
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const weekAgo = new Date(today);
+            weekAgo.setDate(weekAgo.getDate() - 7);
             
-            // Add click event to history items
-            elements.historyList.querySelectorAll('.history-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const historyId = parseInt(item.dataset.id);
-                    const historyItem = state.history.find(h => h.id === historyId);
-                    if (historyItem) {
-                        elements.messageInput.value = historyItem.content;
-                        elements.messageInput.focus();
-                        showMessageScreen();
-                    }
-                });
+            // Filter history by time period
+            const todayItems = state.history.filter(item => {
+                const itemDate = new Date(item.timestamp);
+                return itemDate >= today;
             });
             
-            // Render in history modal
-            elements.historyContent.innerHTML = state.history.map(item => `
-                <div class="history-item p-6 glass-effect-light rounded-xl" data-id="${item.id}">
-                    <div class="history-title text-lg font-semibold mb-2">${item.title}</div>
-                    <div class="text-sm text-gray-400 mb-3">${formatDate(item.timestamp)}</div>
-                    <div class="text-gray-300">${item.content}</div>
-                </div>
-            `).join('');
+            const yesterdayItems = state.history.filter(item => {
+                const itemDate = new Date(item.timestamp);
+                return itemDate >= yesterday && itemDate < today;
+            });
             
-            // Add click event to history modal items
-            elements.historyContent.querySelectorAll('.history-item').forEach(item => {
+            const weekItems = state.history.filter(item => {
+                const itemDate = new Date(item.timestamp);
+                return itemDate >= weekAgo && itemDate < yesterday;
+            });
+            
+            // Render today's history
+            elements.todayHistory.innerHTML = todayItems.length > 0 
+                ? todayItems.map(item => `
+                    <div class="chat-history-item ${state.currentProject?.id === item.projectId ? 'active' : ''}" data-id="${item.id}">
+                        <i data-lucide="message-circle" class="chat-history-item-icon"></i>
+                        <div class="chat-history-item-text">${item.title}</div>
+                    </div>
+                `).join('')
+                : '<div class="text-gray-500 text-sm p-2">No conversations today</div>';
+            
+            // Render yesterday's history
+            elements.yesterdayHistory.innerHTML = yesterdayItems.length > 0 
+                ? yesterdayItems.map(item => `
+                    <div class="chat-history-item ${state.currentProject?.id === item.projectId ? 'active' : ''}" data-id="${item.id}">
+                        <i data-lucide="message-circle" class="chat-history-item-icon"></i>
+                        <div class="chat-history-item-text">${item.title}</div>
+                    </div>
+                `).join('')
+                : '<div class="text-gray-500 text-sm p-2">No conversations yesterday</div>';
+            
+            // Render week's history
+            elements.weekHistory.innerHTML = weekItems.length > 0 
+                ? weekItems.map(item => `
+                    <div class="chat-history-item ${state.currentProject?.id === item.projectId ? 'active' : ''}" data-id="${item.id}">
+                        <i data-lucide="message-circle" class="chat-history-item-icon"></i>
+                        <div class="chat-history-item-text">${item.title}</div>
+                    </div>
+                `).join('')
+                : '<div class="text-gray-500 text-sm p-2">No conversations this week</div>';
+            
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+            
+            // Add click event to history items
+            const allHistoryItems = document.querySelectorAll('.chat-history-item[data-id]');
+            allHistoryItems.forEach(item => {
                 item.addEventListener('click', () => {
                     const historyId = parseInt(item.dataset.id);
                     const historyItem = state.history.find(h => h.id === historyId);
                     if (historyItem) {
-                        elements.messageInput.value = historyItem.content;
-                        elements.messageInput.focus();
-                        elements.historyModal.classList.add('hidden');
-                        elements.historyModal.classList.remove('flex');
-                        showMessageScreen();
+                        // Load project
+                        const project = state.projects.find(p => p.id === historyItem.projectId);
+                        if (project) {
+                            state.currentProject = project;
+                            state.messages = [...project.messages];
+                            elements.chatTitle.textContent = project.title;
+                            showConversation();
+                            
+                            // Update active state
+                            allHistoryItems.forEach(i => i.classList.remove('active'));
+                            item.classList.add('active');
+                        }
                     }
                 });
             });
@@ -3001,8 +3108,8 @@ Always provide complete, production-ready code that works immediately when opene
             
             recognition.onstart = () => {
                 state.isRecording = true;
-                elements.voiceRecording.classList.remove('hidden');
-                elements.messageInput.disabled = true;
+                elements.chatVoiceInputBtn.innerHTML = '<i data-lucide="square" class="w-4 h-4"></i>';
+                elements.chatInput.disabled = true;
             };
             
             recognition.onresult = (event) => {
@@ -3011,7 +3118,7 @@ Always provide complete, production-ready code that works immediately when opene
                     .map(result => result.transcript)
                     .join('');
                 
-                elements.messageInput.value = transcript;
+                elements.chatInput.value = transcript;
             };
             
             recognition.onerror = (event) => {
@@ -3038,9 +3145,9 @@ Always provide complete, production-ready code that works immediately when opene
             }
             
             state.isRecording = false;
-            elements.voiceRecording.classList.add('hidden');
-            elements.messageInput.disabled = !state.selectedProvider || !state.apiStatus[state.selectedProvider];
-            elements.messageInput.focus();
+            elements.chatVoiceInputBtn.innerHTML = '<i data-lucide="mic" class="w-4 h-4"></i>';
+            elements.chatInput.disabled = false;
+            elements.chatInput.focus();
         }
         
         // Handle image upload
@@ -3078,32 +3185,22 @@ Always provide complete, production-ready code that works immediately when opene
         
         // Render image preview
         function renderImagePreview() {
-            if (state.uploadedImages.length === 0) {
-                elements.imagePreview.classList.add('hidden');
-                return;
+            // This would be implemented to show image previews in the chat input
+            // For simplicity, we'll just show a count of uploaded images
+            if (state.uploadedImages.length > 0) {
+                elements.chatAttachImageBtn.innerHTML = `
+                    <div class="relative">
+                        <i data-lucide="paperclip" class="w-4 h-4"></i>
+                        <span class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                            ${state.uploadedImages.length}
+                        </span>
+                    </div>
+                `;
+            } else {
+                elements.chatAttachImageBtn.innerHTML = '<i data-lucide="paperclip" class="w-4 h-4"></i>';
             }
             
-            elements.imagePreview.classList.remove('hidden');
-            elements.imagePreview.innerHTML = state.uploadedImages.map(image => `
-                <div class="image-preview">
-                    <img src="${image.data}" alt="${image.name}">
-                    <div class="image-preview-remove" data-id="${image.id}">
-                        <i data-lucide="x" class="w-4 h-4"></i>
-                    </div>
-                </div>
-            `).join('');
-            
-            // Re-initialize Lucide icons
             lucide.createIcons();
-            
-            // Add click event to remove buttons
-            elements.imagePreview.querySelectorAll('.image-preview-remove').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const imageId = parseFloat(btn.dataset.id);
-                    state.uploadedImages = state.uploadedImages.filter(img => img.id !== imageId);
-                    renderImagePreview();
-                });
-            });
         }
         
         // Clear uploaded images
@@ -3127,25 +3224,20 @@ Always provide complete, production-ready code that works immediately when opene
         function initializeRealTimeUpdates() {
             // Simulate real-time updates
             setInterval(() => {
-                // Update random stats
-                if (Math.random() > 0.7) {
-                    const activeUsers = document.querySelector('.stats-value');
-                    if (activeUsers) {
-                        const currentValue = parseInt(activeUsers.textContent.replace('+', ''));
-                        const newValue = currentValue + Math.floor(Math.random() * 5);
-                        activeUsers.textContent = newValue + '+';
-                    }
-                }
+                // Update random stats if needed
             }, 5000);
         }
         
         // Setup event listeners
         function setupEventListeners() {
+            // New chat button
+            elements.chatNewChatBtn.addEventListener('click', startNewChat);
+            
             // Send message
-            elements.sendBtn.addEventListener('click', sendMessage);
+            elements.chatSendBtn.addEventListener('click', sendMessage);
             
             // Enter key to send message
-            elements.messageInput.addEventListener('keydown', (e) => {
+            elements.chatInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage();
@@ -3153,13 +3245,48 @@ Always provide complete, production-ready code that works immediately when opene
             });
             
             // Auto-resize textarea
-            elements.messageInput.addEventListener('input', () => {
-                elements.messageInput.style.height = 'auto';
-                elements.messageInput.style.height = Math.min(elements.messageInput.scrollHeight, 200) + 'px';
+            elements.chatInput.addEventListener('input', () => {
+                elements.chatInput.style.height = 'auto';
+                elements.chatInput.style.height = Math.min(elements.chatInput.scrollHeight, 200) + 'px';
             });
             
-            // Settings modal
-            elements.settingsBtn.addEventListener('click', () => {
+            // Mobile menu
+            elements.chatMobileMenuBtn.addEventListener('click', () => {
+                elements.chatSidebar.classList.toggle('open');
+                elements.mobileOverlay.classList.toggle('active');
+            });
+            
+            elements.mobileOverlay.addEventListener('click', () => {
+                elements.chatSidebar.classList.remove('open');
+                elements.mobileOverlay.classList.remove('active');
+            });
+            
+            // User menu
+            elements.chatUserMenu.addEventListener('click', () => {
+                if (state.user) {
+                    signOut();
+                } else {
+                    // Show Google sign-in button
+                    const googleSignInBtn = document.getElementById('googleSignInBtn');
+                    if (googleSignInBtn) {
+                        googleSignInBtn.click();
+                    }
+                }
+            });
+            
+            // Templates button
+            elements.chatTemplatesBtn.addEventListener('click', () => {
+                elements.templatesModal.classList.remove('hidden');
+                elements.templatesModal.classList.add('flex');
+            });
+            
+            elements.closeTemplatesBtn.addEventListener('click', () => {
+                elements.templatesModal.classList.add('hidden');
+                elements.templatesModal.classList.remove('flex');
+            });
+            
+            // Settings button
+            elements.chatSettingsBtn.addEventListener('click', () => {
                 elements.settingsModal.classList.remove('hidden');
                 elements.settingsModal.classList.add('flex');
             });
@@ -3176,7 +3303,7 @@ Always provide complete, production-ready code that works immediately when opene
             
             elements.saveSettingsBtn.addEventListener('click', () => {
                 // Save backend URL
-                state.backendUrl = elements.backendUrlInput.value;
+                state.backendUrl = elements.backendUrlInput ? elements.backendUrlInput.value : state.backendUrl;
                 
                 // Save AI settings
                 state.aiSettings.creativity = parseInt(elements.creativitySlider.value);
@@ -3200,9 +3327,6 @@ Always provide complete, production-ready code that works immediately when opene
             });
             
             // Preview modal
-            elements.previewBtn.addEventListener('click', previewWebsite);
-            elements.downloadBtn.addEventListener('click', downloadWebsite);
-            
             elements.closePreviewBtn.addEventListener('click', () => {
                 elements.previewModal.classList.add('hidden');
                 elements.previewModal.classList.remove('flex');
@@ -3214,45 +3338,13 @@ Always provide complete, production-ready code that works immediately when opene
                 elements.previewModal.classList.remove('flex');
             });
             
-            // New project button
-            elements.newProjectBtn.addEventListener('click', () => {
-                state.currentProject = null;
-                state.messages = [];
-                state.generatedWebsite = null;
-                elements.previewBtn.disabled = true;
-                elements.downloadBtn.disabled = true;
-                showWelcomeScreen();
+            // History modal
+            elements.closeHistoryBtn.addEventListener('click', () => {
+                elements.historyModal.classList.add('hidden');
+                elements.historyModal.classList.remove('flex');
             });
-            
-            // Deploy button
-            elements.deployBtn.addEventListener('click', () => {
-                showNotification('Deploy functionality would be implemented here. This would integrate with hosting services like Vercel, Netlify, etc.', 'info');
-            });
-            
-            // Authentication
-            elements.signOutBtn.addEventListener('click', signOut);
-            
-            // Mobile menu
-            elements.mobileMenuBtn.addEventListener('click', () => {
-                elements.sidebar.classList.toggle('open');
-                elements.mobileOverlay.classList.toggle('active');
-            });
-            
-            elements.mobileOverlay.addEventListener('click', () => {
-                elements.sidebar.classList.remove('open');
-                elements.mobileOverlay.classList.remove('active');
-            });
-            
-            // Theme toggle
-            elements.themeToggle.addEventListener('click', toggleTheme);
-            elements.mobileThemeToggle.addEventListener('click', toggleTheme);
-            elements.settingsThemeToggle.addEventListener('click', toggleTheme);
             
             // Notification panel
-            elements.notificationBtn.addEventListener('click', () => {
-                elements.notificationPanel.classList.toggle('translate-x-full');
-            });
-            
             elements.closeNotificationPanel.addEventListener('click', () => {
                 elements.notificationPanel.classList.add('translate-x-full');
             });
@@ -3273,30 +3365,8 @@ Always provide complete, production-ready code that works immediately when opene
             // Clear data
             elements.clearDataBtn.addEventListener('click', clearAllData);
             
-            // Templates modal
-            elements.templatesBtn.addEventListener('click', () => {
-                elements.templatesModal.classList.remove('hidden');
-                elements.templatesModal.classList.add('flex');
-            });
-            
-            elements.closeTemplatesBtn.addEventListener('click', () => {
-                elements.templatesModal.classList.add('hidden');
-                elements.templatesModal.classList.remove('flex');
-            });
-            
-            // History modal
-            elements.historyBtn.addEventListener('click', () => {
-                elements.historyModal.classList.remove('hidden');
-                elements.historyModal.classList.add('flex');
-            });
-            
-            elements.closeHistoryBtn.addEventListener('click', () => {
-                elements.historyModal.classList.add('hidden');
-                elements.historyModal.classList.remove('flex');
-            });
-            
             // Voice input
-            elements.voiceInputBtn.addEventListener('click', () => {
+            elements.chatVoiceInputBtn.addEventListener('click', () => {
                 if (state.isRecording) {
                     stopVoiceRecording();
                 } else {
@@ -3304,10 +3374,8 @@ Always provide complete, production-ready code that works immediately when opene
                 }
             });
             
-            elements.stopVoiceBtn.addEventListener('click', stopVoiceRecording);
-            
             // Image upload
-            elements.attachImageBtn.addEventListener('click', () => {
+            elements.chatAttachImageBtn.addEventListener('click', () => {
                 elements.imageInput.click();
             });
             
@@ -3379,12 +3447,13 @@ Always provide complete, production-ready code that works immediately when opene
                 });
             });
             
-            // Suggestion chips
-            document.querySelectorAll('.suggestion-chip').forEach(chip => {
-                chip.addEventListener('click', () => {
-                    elements.messageInput.value = chip.textContent.trim();
-                    elements.messageInput.focus();
-                    showMessageScreen();
+            // Welcome examples
+            document.querySelectorAll('.chat-welcome-example').forEach(example => {
+                example.addEventListener('click', () => {
+                    const prompt = example.dataset.prompt;
+                    elements.chatInput.value = prompt;
+                    elements.chatInput.focus();
+                    startNewChat();
                 });
             });
             
@@ -3396,7 +3465,7 @@ Always provide complete, production-ready code that works immediately when opene
             // Handle window resize for responsive behavior
             window.addEventListener('resize', () => {
                 if (window.innerWidth > 768) {
-                    elements.sidebar.classList.remove('open');
+                    elements.chatSidebar.classList.remove('open');
                     elements.mobileOverlay.classList.remove('active');
                 }
             });
@@ -3453,8 +3522,8 @@ Always provide complete, production-ready code that works immediately when opene
             return div.innerHTML;
         }
         
-        // Initialize the app
-        init();
+        // Initialize the app when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
