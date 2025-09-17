@@ -10,70 +10,26 @@ const axios = require('axios');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 10000; // Render uses port 10000
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'OK', message: 'Backend is running' });
+});
+
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log('MongoDB connected'))
-.catch(err => console.log(err));
+.catch(err => console.log('MongoDB connection error:', err));
 
-// Define Schemas
-const userSchema = new mongoose.Schema({
-    googleId: String,
-    name: String,
-    email: String,
-    picture: String,
-    token: String,
-    apiKeys: {
-        claude: String,
-        gemini: String,
-        groq: String,
-        zai: String
-    },
-    stats: {
-        projects: { type: Number, default: 0 },
-        messages: { type: Number, default: 0 },
-        apiCalls: { type: Number, default: 0 }
-    },
-    settings: {
-        darkMode: { type: Boolean, default: true },
-        aiSettings: {
-            creativity: { type: Number, default: 70 },
-            length: { type: Number, default: 2000 },
-            focus: { type: Number, default: 50 },
-            codeStyle: { type: String, default: 'modern' }
-        }
-    },
-    createdAt: { type: Date, default: Date.now }
-});
-
-const projectSchema = new mongoose.Schema({
-    title: String,
-    messages: Array,
-    provider: String,
-    userId: String,
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
-});
-
-const historySchema = new mongoose.Schema({
-    title: String,
-    content: String,
-    userId: String,
-    projectId: String,
-    timestamp: { type: Date, default: Date.now }
-});
-
-const User = mongoose.model('User', userSchema);
-const Project = mongoose.model('Project', projectSchema);
-const History = mongoose.model('History', historySchema);
+// Import models
+const User = require('./models/User');
+const Project = require('./models/Project');
+const History = require('./models/History');
 
 // Routes
 app.post('/api/auth/google', async (req, res) => {
@@ -115,7 +71,7 @@ app.post('/api/auth/google', async (req, res) => {
         });
     } catch (error) {
         console.error('Google auth error:', error);
-        res.status(500).json({ success: false, message: 'Authentication failed' });
+        res.status(500).json({ success: false, message: 'Authentication failed', error: error.message });
     }
 });
 
@@ -142,7 +98,7 @@ app.get('/api/user/data', async (req, res) => {
         });
     } catch (error) {
         console.error('Get user data error:', error);
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 });
 
@@ -174,7 +130,7 @@ app.post('/api/projects', async (req, res) => {
         res.json({ success: true, project });
     } catch (error) {
         console.error('Create project error:', error);
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 });
 
@@ -216,7 +172,8 @@ app.post('/api/chat', async (req, res) => {
         console.error('Chat error:', error);
         res.status(500).json({ 
             success: false, 
-            message: error.message || 'Server error' 
+            message: error.message || 'Server error',
+            error: error.message 
         });
     }
 });
@@ -286,8 +243,7 @@ async function callGroqAPI(messages, apiKey, options) {
 }
 
 async function callZaiAPI(messages, apiKey, options) {
-    // This is a placeholder for Z.ai API
-    // Replace with actual Z.ai API implementation
+    // Placeholder for Z.ai API
     return "Z.ai API integration would be implemented here";
 }
 
