@@ -10,7 +10,7 @@ const axios = require('axios');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 10000; // Render uses port 10000
+const PORT = process.env.PORT || 10000;
 
 // Middleware
 app.use(cors());
@@ -21,10 +21,28 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK', message: 'Backend is running' });
 });
 
+// MongoDB Connection with better error handling
+const connectDB = async () => {
+    try {
+        console.log('Attempting to connect to MongoDB...');
+        console.log('Connection string:', process.env.MONGODB_URI ? '***HIDDEN***' : 'NOT FOUND');
+        
+        if (!process.env.MONGODB_URI) {
+            throw new Error('MONGODB_URI environment variable is not set');
+        }
+        
+        const conn = await mongoose.connect(process.env.MONGODB_URI);
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
+    } catch (error) {
+        console.error('MongoDB Connection Error:', error.message);
+        console.error('Full error:', error);
+        // Don't exit the process, just log the error
+        // The app can still run without MongoDB for testing other endpoints
+    }
+};
+
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log('MongoDB connection error:', err));
+connectDB();
 
 // Import models
 const User = require('./models/User');
