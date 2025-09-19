@@ -1,6 +1,4 @@
 // api/chat.js
-import { createParser } from 'eventsource-parser';
-
 export const config = {
   runtime: 'edge',
 };
@@ -50,16 +48,16 @@ export default async function handler(req) {
             const chunks = response.content.match(/.{1,5}/g) || [];
             
             for (let i = 0; i < chunks.length; i++) {
-            const chunk = chunks[i];
-            const data = {
-              content: chunk
-            };
+              const chunk = chunks[i];
+              const data = {
+                content: chunk
+              };
             
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
-            
-            // Wait for typing effect (30 characters per second)
-            await new Promise(resolve => setTimeout(resolve, 1000 / 30));
-          }
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+              
+              // Wait for typing effect (30 characters per second)
+              await new Promise(resolve => setTimeout(resolve, 1000 / 30));
+            }
             
             // Send end signal
             controller.enqueue(encoder.encode('data: [DONE]\n\n'));
@@ -76,18 +74,12 @@ export default async function handler(req) {
           'Content-Type': 'text/plain; charset=utf-8',
           'Cache-Control': 'no-cache',
           'Connection': 'keep-alive',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
         }
       });
     } else {
       return new Response(JSON.stringify(response), {
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
         }
       });
     }
@@ -97,14 +89,12 @@ export default async function handler(req) {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
         }
       });
   }
 }
 
+// Helper functions for each API provider
 async function callGroqAPI(messages, options) {
   const GROQ_API_KEY = process.env.GROQ_API_KEY;
   
