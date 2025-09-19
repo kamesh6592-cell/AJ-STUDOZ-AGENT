@@ -4,8 +4,25 @@ export const config = {
 };
 
 export default async function handler(req) {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    });
+  }
+
   if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
+    return new Response('Method not allowed', { 
+      status: 405,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      }
+    });
   }
 
   try {
@@ -14,7 +31,10 @@ export default async function handler(req) {
     if (!messages || !provider) {
       return new Response(JSON.stringify({ error: 'Missing required parameters' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        }
       });
     }
 
@@ -35,7 +55,10 @@ export default async function handler(req) {
       default:
         return new Response(JSON.stringify({ error: 'Unsupported provider' }), {
           status: 400,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          }
         });
     }
 
@@ -74,12 +97,14 @@ export default async function handler(req) {
           'Content-Type': 'text/plain; charset=utf-8',
           'Cache-Control': 'no-cache',
           'Connection': 'keep-alive',
+          'Access-Control-Allow-Origin': '*',
         }
       });
     } else {
       return new Response(JSON.stringify(response), {
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         }
       });
     }
@@ -89,6 +114,7 @@ export default async function handler(req) {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         }
       });
   }
