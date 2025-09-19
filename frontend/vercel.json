@@ -1,12 +1,6 @@
 {
   "version": 2,
   "name": "aj-personal-agent",
-  "builds": [
-    {
-      "src": "api/chat.js",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
     {
       "src": "/api/(.*)",
