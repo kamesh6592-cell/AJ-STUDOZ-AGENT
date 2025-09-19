@@ -1,5 +1,24 @@
 {
   "version": 2,
+  "name": "aj-personal-agent",
+  "builds": [
+    {
+      "src": "api/chat.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    }
+  ],
+  "env": {
+    "GROQ_API_KEY": "@groq_api_key",
+    "GEMINI_API_KEY": "@gemini_api_key",
+    "ANTHROPIC_API_KEY": "@anthropic_api_key",
+    "XAI_API_KEY": "@xai_api_key"
+  },
   "functions": {
     "api/chat.js": {
       "runtime": "edge",
@@ -13,12 +32,6 @@
       "destination": "/index.html"
     }
   ],
-  "env": {
-    "GROQ_API_KEY": "@groq_api_key",
-    "GEMINI_API_KEY": "@gemini_api_key",
-    "ANTHROPIC_API_KEY": "@anthropic_api_key",
-    "XAI_API_KEY": "@xai_api_key"
-  },
   "headers": [
     {
       "source": "/api/(.*)",
