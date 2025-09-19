@@ -1,9 +1,0 @@
-{
-  "name": "ai-website-studio-frontend",
-  "version": "1.0.0",
-  "description": "AI Website Studio Frontend",
-  "scripts": {
-    "dev": "npx serve .",
-    "build": "echo 'No build needed for static site'"
-  }
-}
