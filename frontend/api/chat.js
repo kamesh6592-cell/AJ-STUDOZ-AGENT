@@ -1,4 +1,3 @@
-// api/chat.js
 export const config = {
   runtime: 'edge',
 };
