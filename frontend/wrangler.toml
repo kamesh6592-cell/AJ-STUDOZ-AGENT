@@ -1,18 +1,14 @@
 name = "aj-personal-agent"
 compatibility_date = "2024-09-21"
-pages_build_output_dir = "./dist"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "aj-personal-agent-db"
-database_id = "your-database-id-here"
+pages_build_output_dir = "./"
 
 [env.production]
 vars = { 
   GROQ_API_KEY = "@groq_api_key",
   GEMINI_API_KEY = "@gemini_api_key",
   ANTHROPIC_API_KEY = "@anthropic_api_key",
-  XAI_API_KEY = "@xai_api_key"
+  XAI_API_KEY = "@xai_api_key",
+  NODE_ENV = "production"
 }
 
 [env.staging]
@@ -20,5 +16,19 @@ vars = {
   GROQ_API_KEY = "@groq_api_key_staging",
   GEMINI_API_KEY = "@gemini_api_key_staging",
   ANTHROPIC_API_KEY = "@anthropic_api_key_staging",
-  XAI_API_KEY = "@xai_api_key_staging"
+  XAI_API_KEY = "@xai_api_key_staging",
+  NODE_ENV = "staging"
 }
+
+[build]
+command = "echo 'No build needed for static site'"
+
+[[r2_buckets]]
+binding = "MY_BUCKET"
+bucket_name = "aj-personal-agent-uploads"
+preview_bucket_name = "aj-personal-agent-uploads-preview"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "aj-personal-agent-db"
+database_id = "your-database-id-here"
