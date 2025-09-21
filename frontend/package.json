@@ -1,22 +1,22 @@
 {
   "name": "aj-personal-agent",
   "version": "1.0.0",
-  "description": "AI Website Studio by AJ STUDIOZ - Cloudflare Pages",
-  "type": "module",
+  "description": "AI-powered website creation studio",
+  "main": "index.js",
   "scripts": {
-    "dev": "wrangler pages dev --local --port 8788",
-    "deploy": "wrangler pages publish . --project-name=aj-personal-agent",
-    "tail": "wrangler pages deployment tail",
-    "generate-types": "wrangler types"
-  },
-  "dependencies": {
-    "hono": "^3.12.8"
+    "dev": "wrangler pages dev",
+    "deploy": "wrangler pages deploy",
+    "deploy:prod": "wrangler pages deploy --env production",
+    "deploy:staging": "wrangler pages deploy --env staging"
   },
   "devDependencies": {
-    "wrangler": "^3.0.0",
-    "@cloudflare/workers-types": "^4.0.0"
+    "wrangler": "^3.0.0"
   },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+  "keywords": [
+    "ai",
+    "website-builder",
+    "cloudflare"
+  ],
+  "author": "AJ STUDIOZ",
+  "license": "MIT"
 }
