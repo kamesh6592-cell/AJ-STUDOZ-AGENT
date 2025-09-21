@@ -1,0 +1,12 @@
+{
+  "name": "aj-personal-agent",
+  "version": "1.0.0",
+  "description": "AI Website Studio by AJ STUDIOZ",
+  "scripts": {
+    "build": "echo 'No build process needed for static site'",
+    "deploy": "wrangler pages publish . --project-name=aj-personal-agent"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
